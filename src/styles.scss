@@ -1,10 +1,77 @@
-.login-container{
-    max-width: 400px; 
+.login-container {
+    max-width: 400px;
     margin: 60px auto 0;
-  }
-  
-  .error{
-    color: tomato; 
-    font-size: 12px; 
-    padding-top: 4px
-  }
+}
+
+.error {
+    color: tomato;
+    font-size: 12px;
+    padding-top: 4px;
+}
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #fafafa;
+}
+
+p {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+body {
+    font-family: "Lato", sans-serif;
+}
+.sidenav {
+    font-family: "Poppins", sans-serif;
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background: linear-gradient(to right, #00b4db, #0083b0);
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #f1f1f1;
+    display: block;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.sidenav a:hover {
+    color: #ffcccc;
+}
+
+.sidenav img {
+    display: flex;
+    text-align: center;
+    width: 50%;
+    height: 15%;
+}
+
+.sidenav button {
+    width: 80%;
+    color: wheat;
+    margin: 20px;
+}
+
+.sidenav h3 {
+    text-align: center;
+    color: #f1f1f1;
+}
+
+.main {
+    margin-left: 250px; /* Same as the width of the sidenav */
+    font-size: 24px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}

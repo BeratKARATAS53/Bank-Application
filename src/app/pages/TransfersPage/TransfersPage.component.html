@@ -1,3 +1,55 @@
-<p>
-  TransfersPage works!
-</p>
+<div class="sidenav">
+    <h3>{{ username }}</h3>
+    <hr />
+    <a href="/">Ana Sayfa</a>
+    <hr />
+    <a href="/accounts">Hesaplarım</a>
+    <hr />
+    <a href="/transfers">Transferlerim</a>
+    <hr />
+    <a href="#last">Son Hareketler</a>
+    <hr />
+    <button class="btn btn-danger btn-lg" (click)="logOut()">Çıkış Yap</button>
+</div>
+<!-- <div class="main">
+    <div class="container-sm">
+        <h4>Hesaplarım</h4>
+        <div class="login-container">
+            <h2>Hesap Ekle</h2>
+            <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="name">Hesap Adı</label>
+                    <input
+                        type="text"
+                        formControlName="name"
+                        class="form-control"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="amount">Minimum Tutar</label>
+                    <input
+                        type="number"
+                        formControlName="amount"
+                        class="form-control"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="currency">Para Birimi</label>
+                    <select
+                        class="custom-select custom-select-lg mb-3"
+                        formControlName="currency"
+                    >
+                        <option value="TL">TL</option>
+                        <option value="Dolar">Dolar</option>
+                        <option value="Euro">Euro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-lg btn-block">
+                        Hesap Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->

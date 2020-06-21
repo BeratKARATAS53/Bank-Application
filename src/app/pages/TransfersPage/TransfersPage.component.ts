@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 
 @Component({
   selector: 'app-TransfersPage',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./TransfersPage.component.css']
 })
 export class TransfersPageComponent implements OnInit {
+    username: string
+    constructor(private session: SessionService) {
+        this.username = session.getToken()
+    }
 
-  constructor() { }
+    ngOnInit() {}
 
-  ngOnInit() {
-  }
+    logOut(){
+        this.session.logOut()
+    }
 
 }
