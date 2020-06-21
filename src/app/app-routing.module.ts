@@ -11,11 +11,11 @@ import { AccountsPageComponent } from './pages/AccountsPage/AccountsPage.compone
 import { AccountDetailPageComponent } from './pages/AccountDetailPage/AccountDetailPage.component';
 
 const routes: Routes = [
-    { path: 'account/:id', component: AccountDetailPageComponent },
     { path: 'accounts', component: AccountsPageComponent },
+    { path: 'account/:id', component: AccountDetailPageComponent },
+    { path: 'transfers', component: TransfersPageComponent },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
-    { path: 'transfers', component: TransfersPageComponent },
     { path: 'main', component: MainPageComponent },
     { path: '', redirectTo: '/main', pathMatch: 'full' },
 ];
