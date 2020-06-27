@@ -1,3 +1,25 @@
-<p>
-    Sidebar works!
-</p>
+<div class="sidenav">
+    <h3>{{ username }}</h3>
+    <hr />
+    <a href="/accounts">Hesaplarım ({{ numberOfAccounts }})</a>
+    <hr />
+    <a href="/transfers">Transferlerim</a>
+    <hr />
+    <a href="#last">Son Hareketler</a>
+    <hr />
+    <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
+        Çıkış Yap
+    </button>
+</div>
+
+<ng-template #logOutModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Emin Misiniz?</h4>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success btn-lg" (click)="logOut()">Evet</button>
+        <button class="btn btn-danger btn-lg" (click)="modal.close()">
+            Hayır
+        </button>
+    </div>
+</ng-template>

@@ -1,3 +1,49 @@
-<p>
-    AccountDetailPage works!
-</p>
+<app-Sidebar></app-Sidebar>
+<div class="main">
+    <div class="container-sm">
+        <h2>Hesap Detayı</h2>
+        <hr />
+        <div class="row">
+            <div class="col-5">
+                <h5>
+                    Hesap Adı:
+                    <span
+                        >{{ account.accountName }} ({{
+                            account.currency
+                        }})</span
+                    >
+                </h5>
+            </div>
+            <div class="col-2">
+                <h5>
+                    Hesap No:
+                    <span>{{ account.accountNumber }}</span>
+                </h5>
+            </div>
+            <div class="col-2">
+                <h5>
+                    Bakiye:
+                    <span>{{ account.amount }}</span>
+                </h5>
+            </div>
+            <div class="col-3">
+                <h5 style="color: tomato;"><span style="color: darkgrey;">Oluşturulma Tarihi: </span>{{ account.date }}
+                </h5>
+            </div>
+        </div>
+        <br/>
+        <h3>Hesap İşlemleri</h3>
+        <table class="table">
+            <tr>
+                <th>İşlem No:</th>
+                <th>İşlem Açıklaması:</th>
+                <th>İşlem Türü:</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>11</td>
+                <td>111</td>
+            </tr>
+        </table>
+    </div>
+</div>

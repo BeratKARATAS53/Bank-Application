@@ -1,3 +1,161 @@
-<p>
-    AccountsPage works!
-</p>
+<app-Sidebar></app-Sidebar>
+<div class="main">
+    <div class="container-sm">
+        <div class="row">
+            <div class="col-10">
+                <h2>Hesaplarım ({{ numberOfAccounts }} Adet)</h2>
+                <div
+                    class="row card-group"
+                    *ngIf="numberOfAccounts; else elseBlock"
+                >
+                    <div
+                        class="col-4"
+                        style="width: auto; height: auto;"
+                        *ngFor="let account of accounts"
+                    >
+                        <div class="card account-card">
+                            <h5 class="card-title">
+                                {{ account.accountName }} (
+                                {{ account.currency }})
+                            </h5>
+                            <p class="card-text">
+                                Hesap Numarası: {{ account.accountNumber }}
+                            </p>
+                            <p class="card-text">
+                                Toplam Tutar: {{ account.amount }}
+                            </p>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                (click)="gotoDetails(account.accountNumber)"
+                            >
+                                Ayrıntılar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #elseBlock
+                    ><h4>Hesabınız Bulunmamakta.</h4></ng-template
+                >
+            </div>
+            <div class="col-2">
+                <button
+                    class="btn btn-lg btn-primary"
+                    (click)="open(addAccount)"
+                >
+                    Hesap Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #addAccount let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Hesap Ekleme</h4>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+                <label for="accountName">Hesap Adı *</label>
+                <input
+                    type="text"
+                    formControlName="accountName"
+                    class="form-control"
+                    required
+                />
+                <div
+                    class="alert alert-danger"
+                    *ngIf="
+                        accountName.errors &&
+                        (accountName.dirty || accountName.touched)
+                    "
+                >
+                    <p *ngIf="accountName.errors.required">
+                        Hesap Adı Girmek Zorunlu!
+                    </p>
+                </div>
+                <div
+                    class="form-group"
+                    *ngIf="numberOfAccounts != 0; else elseblock"
+                >
+                    <label for="amount">Tutar *</label>
+                    <input
+                        type="number"
+                        formControlName="amount"
+                        class="form-control"
+                    />
+                    <div
+                        class="alert alert-danger"
+                        *ngIf="
+                            accountName.errors &&
+                            (accountName.dirty || accountName.touched)
+                        "
+                    >
+                        <p *ngIf="accountName.errors.required">
+                            Tutar Girmek Zorunlu!
+                        </p>
+                    </div>
+                    <br />
+                    <label for="otherAmount">Paranın Çekileceği Hesap *</label>
+                    <select
+                        class="custom-select custom-select-lg mb-3"
+                        formControlName="otherAmount"
+                    >
+                        <option
+                            *ngFor="let account of accounts"
+                            value="{{ account.accountNumber }}"
+                            >{{ account.accountNumber }} -
+                            {{ account.amount }}</option
+                        >
+                    </select>
+                    <div
+                        class="alert alert-danger"
+                        *ngIf="
+                            otherAmount.errors &&
+                            (otherAmount.dirty || otherAmount.touched)
+                        "
+                    >
+                        <p *ngIf="otherAmount.errors.required">
+                            Paranın Çekileceği Hesap Seçilmek Zorunda!
+                        </p>
+                    </div>
+                    <label for="currency">Para Birimi *</label>
+                    <select
+                        class="custom-select custom-select-lg mb-3"
+                        formControlName="currency"
+                    >
+                        <option value="TL">Türk Lirası (TL)</option>
+                        <option value="$">Dolar ($)</option>
+                        <option value="€">Euro (€)</option>
+                        <option value="Altın">Altın</option>
+                    </select>
+                    <div
+                        class="alert alert-danger"
+                        *ngIf="
+                            currency.errors &&
+                            (currency.dirty || currency.touched)
+                        "
+                    >
+                        <p *ngIf="currency.errors.required">
+                            Para Birimi Seçilmek Zorunda!
+                        </p>
+                    </div>
+                </div>
+                <ng-template #elseblock>
+                    <label for="amount">Tutar</label>
+                    <div class="alert alert-info" role="alert">
+                        İlk Hesabınızı 10.000 TL İle Oluşturmanız Zorunludur!
+                    </div>
+                    <label for="amount">Para Birimi</label>
+                    <div class="alert alert-info" role="alert">
+                        TL
+                    </div>
+                </ng-template>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-lg btn-block">
+                        Hesap Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>
