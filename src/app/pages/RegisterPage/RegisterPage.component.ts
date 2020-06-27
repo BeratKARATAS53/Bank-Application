@@ -27,7 +27,7 @@ export class RegisterPageComponent implements OnInit {
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
             username: ['', Validators.required],
-            password: ['', [Validators.required, Validators.minLength(8)]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
         });
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }

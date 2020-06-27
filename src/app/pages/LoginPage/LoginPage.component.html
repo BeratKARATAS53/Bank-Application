@@ -24,7 +24,7 @@
                     formControlName="password"
                     class="form-control"
                     required
-                    minlength="8"
+                    minlength="6"
                 />
                 <div
                     class="alert alert-danger"
@@ -36,7 +36,7 @@
                         Şifre Girmek Zorunlu!
                     </p>
                     <p *ngIf="password.errors.minlength">
-                        Şifre Minimum 8 Karakterli Olmalı!
+                        Şifre Minimum 6 Karakterli Olmalı!
                     </p>
                 </div>
             </div>

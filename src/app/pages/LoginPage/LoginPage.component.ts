@@ -12,9 +12,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginPageComponent implements OnInit {
     loginForm: FormGroup;
     customer = new Customer();
-    loading = false;
-    submitted = false;
-    returnUrl: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -26,9 +23,8 @@ export class LoginPageComponent implements OnInit {
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
-            password: ['', [Validators.required, Validators.minLength(8)]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
         });
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     get username() {
@@ -40,14 +36,12 @@ export class LoginPageComponent implements OnInit {
     }
 
     onSubmit() {
-        this.submitted = true;
         this.customer = this.loginForm.value;
 
-        // stop here if form is invalid
         if (this.loginForm.invalid) {
+            // Eğer form'da herhangi bir validasyon hatası çıkarsa işlem yapılmaz!
             return;
         }
-        this.loading = true;
 
         this.session.login(this.customer.username, this.customer.password);
     }
