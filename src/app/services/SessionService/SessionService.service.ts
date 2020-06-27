@@ -1,7 +1,7 @@
 import { RegisterPageComponent } from './../../pages/RegisterPage/RegisterPage.component';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { database } from '../DexieService/BankApplicationDatabase';
+import { database } from '../DexieService/BankApplicationDB';
 
 export const TOKEN_NAME: string = 'token';
 @Injectable({
@@ -14,19 +14,23 @@ export class SessionService {
     ngOnInit() {}
 
     getToken(): string {
+        // Giriş yapan kullanıcının tokenını local storage'dan çekme işlemi
         return localStorage.getItem(TOKEN_NAME);
     }
     setToken(token: string): void {
+        // Giriş yapan kullanıcının tokenını local storage'a kaydetme işlemi
+        // ! Backend olmadığından gerçek bir token yerine kullanıcı adını local storage'a ekliyorum.
         localStorage.setItem(TOKEN_NAME, token);
     }
 
     register(username: string, password: string) {
+        // Kayıt Olma Fonksiyonu
         database.customers
             .put({ username: username, password: password })
             .then(() => {
                 alert('Kayıt Başarılı');
                 // this.registerComp.submitted = true
-                // Eğer veritabanında böyle bir kullanıcı yoksa yeni kullanıcıyı ekliyorum ve login sayfasına yönlendiriyorum.
+                // Eğer veritabanında böyle bir kullanıcı yoksa yeni kullanıcıyı eklenir ve login sayfasına yönlendirilir.
                 this.router.navigateByUrl('/login');
             })
             .catch((error) => {
@@ -47,7 +51,7 @@ export class SessionService {
                     if (item) {
                         alert('Giriş Başarılı');
                         // this.registerComp.loggedIn = true
-                        this.setToken(item.username); // Eğer giriş başarılı ise token'ı local storage'a kaydediyorum.
+                        this.setToken(item.username); // Eğer giriş başarılı ise token local storage'a kaydedilir.
                         this.router.navigateByUrl('/'); // Ardından Ana Sayfaya yönlendiriyorum.
                     }
                 });
@@ -58,8 +62,9 @@ export class SessionService {
             });
     }
 
-    logOut(){
-        localStorage.clear();
-        window.location.reload();
+    logOut() {
+        // Oturumdan Çıkış İşlemi
+        localStorage.clear(); // Local Storage'dan token temizlenir.
+        window.location.reload(); // Sayfa yenilenerek otomatikman login sayfasına yönlendirilir.
     }
 }
