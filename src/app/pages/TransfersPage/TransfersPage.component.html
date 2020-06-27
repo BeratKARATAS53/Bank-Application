@@ -1,43 +1,136 @@
 <app-Sidebar></app-Sidebar>
-<!-- <div class="main">
+<div class="main">
     <div class="container-sm">
-        <h4>Hesaplarım</h4>
-        <div class="login-container">
-            <h2>Hesap Ekle</h2>
-            <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
-                <div class="form-group">
-                    <label for="name">Hesap Adı</label>
-                    <input
-                        type="text"
-                        formControlName="name"
-                        class="form-control"
-                    />
+        <div class="row">
+            <div class="col-10">
+                <h2>Transferlerim</h2>
+                <div *ngIf="transfers.length !== 0; else noTransfer">
+                    <table class="table">
+                        <tr>
+                            <th>Gönderen Hesap Numarası</th>
+                            <th>Alan Hesap Numarası</th>
+                            <th>Tutar</th>
+                            <th>Açıklama</th>
+                        </tr>
+                        <tr *ngFor="let transfer of transfers">
+                            <td>{{ transfer.customerSend }}</td>
+                            <td>{{ transfer.customerReceive }}</td>
+                            <td>{{ transfer.amount }}</td>
+                            <td>{{ transfer.description }}</td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="form-group">
-                    <label for="amount">Minimum Tutar</label>
-                    <input
-                        type="number"
-                        formControlName="amount"
-                        class="form-control"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="currency">Para Birimi</label>
-                    <select
-                        class="custom-select custom-select-lg mb-3"
-                        formControlName="currency"
+                <ng-template #noTransfer>
+                    <h4>Transferiniz Bulunmamakta.</h4>
+                </ng-template>
+            </div>
+            <div class="col-2">
+                <button
+                    class="btn btn-lg btn-primary"
+                    (click)="open(addTransfer)"
+                >
+                    Transfer Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #addTransfer let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Transfer Ekleme</h4>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+                <label for="customerSend">Gönderen Hesap Numarası *</label>
+
+                <select
+                    class="custom-select custom-select-lg mb-3"
+                    formControlName="customerSend"
+                >
+                    <option
+                        *ngFor="let account of accounts"
+                        value="{{ account.accountNumber }}"
+                        >Hesap No: {{ account.accountNumber }}, Bakiye:
+                        {{ account.amount }}, Para Birimi:
+                        {{ account.currency }}</option
                     >
-                        <option value="TL">TL</option>
-                        <option value="Dolar">Dolar</option>
-                        <option value="Euro">Euro</option>
-                    </select>
+                </select>
+                <div
+                    class="alert alert-danger"
+                    *ngIf="
+                        customerSend.errors &&
+                        (customerSend.dirty || customerSend.touched)
+                    "
+                >
+                    <p *ngIf="customerSend.errors.required">
+                        Gönderen Hesap Bilgisi Seçilmek Zorunda!
+                    </p>
+                </div>
+                <div class="alert alert-info">
+                    Para Birimleri Arasında Dönüşüm Yapıldığını Unutmayın!
+                </div>
+                <label for="customerReceive">Alıcı Hesap Numarası *</label>
+                <input
+                    type="number"
+                    formControlName="customerReceive"
+                    class="form-control"
+                    required
+                />
+                <div
+                    class="alert alert-danger"
+                    *ngIf="
+                        customerReceive.errors &&
+                        (customerReceive.dirty || customerReceive.touched)
+                    "
+                >
+                    <p *ngIf="customerReceive.errors.required">
+                        Alıcı Hesap Bilgisi Seçilmek Zorunda!
+                    </p>
+                    <p *ngIf="customerReceive.errors.min">
+                        Minimum 1 Birim Girmek Zorunlu!
+                    </p>
+                </div>
+                <label for="amount">Tutar *</label>
+                <input
+                    type="number"
+                    formControlName="amount"
+                    class="form-control"
+                    min="1"
+                />
+                <div
+                    class="alert alert-danger"
+                    *ngIf="amount.errors && (amount.dirty || amount.touched)"
+                >
+                    <p *ngIf="amount.errors.required">
+                        Tutar Girmek Zorunlu!
+                    </p>
+                    <p *ngIf="amount.errors.min">
+                        Minimum 1 Birim Girmek Zorunlu!
+                    </p>
+                </div>
+                <label for="description">Açıklama *</label>
+                <input
+                    type="text"
+                    formControlName="description"
+                    class="form-control"
+                />
+                <div
+                    class="alert alert-danger"
+                    *ngIf="
+                        description.errors &&
+                        (description.dirty || description.touched)
+                    "
+                >
+                    <p *ngIf="description.errors.required">
+                        Açıklama Girmek Zorunlu!
+                    </p>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-lg btn-block">
-                        Hesap Ekle
+                        Transfer Ekle
                     </button>
                 </div>
             </form>
         </div>
-    </div>
-</div> -->
+    </ng-template>
+</div>

@@ -89,3 +89,13 @@ export async function getAccount(username: string, accountNumber: number) {
         .and((account) => account.accountNumber == accountNumber)
         .toArray();
 }
+export async function getAccountWithoutUsername(
+    username: string,
+    accountNumber: number
+) {
+    // Hesap Detayını Getirme Fonksiyonu
+    return await database.accounts
+        .where({ accountNumber: accountNumber })
+        .and((account) => account.customerName != username)
+        .toArray();
+}

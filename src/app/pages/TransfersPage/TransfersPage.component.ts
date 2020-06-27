@@ -1,12 +1,21 @@
+import {
+    getAccount,
+    getAccountKey,
+    AccountService,
+    getAccountWithoutUsername,
+} from 'src/app/services/AccountService/AccountService.service';
+import { CurrencyConverterService } from './../../services/CurrencyConverter/CurrencyConverter.service';
+import { Account } from './../../models/Account';
+import {
+    TransferService,
+    userTransfers,
+} from './../../services/TransferService/TransferService.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Transfer } from './../../models/Transfer';
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from 'src/app/services/SessionService/SessionService.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AccountService } from 'src/app/services/AccountService/AccountService.service';
-
-import {
-    numberOfAccounts,
-} from '../../services/AccountService/AccountService.service';
 
 @Component({
     selector: 'app-TransfersPage',
@@ -14,15 +23,27 @@ import {
     styleUrls: ['./TransfersPage.component.css'],
 })
 export class TransfersPageComponent implements OnInit {
+    transferForm: FormGroup;
+
+    transfers: Transfer[];
+    newTransfer = new Transfer();
+
+    accounts: Account[];
+
     username: string;
-    numberOfAccounts: number;
+    rate: number = 15;
+
+    closeResult: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private session: SessionService,
-        private accountService: AccountService
+        private transferSErvice: TransferService,
+        private accountService: AccountService,
+        private currencyService: CurrencyConverterService,
+        private modalService: NgbModal
     ) {
         if (!session.getToken()) {
             // Eğer giriş yapan kullanıcı yoksa Login sayfasına yönlendirir.
@@ -31,14 +52,108 @@ export class TransfersPageComponent implements OnInit {
             this.getFirst(session.getToken());
         }
     }
+
     async getFirst(username: string) {
-        this.username = this.session.getToken()
-        await numberOfAccounts(username).then(
-            (resolve) => (this.numberOfAccounts = resolve)
+        this.username = this.session.getToken();
+        await userTransfers(username).then(
+            (resolve) => (this.transfers = resolve)
         );
+        console.log(this.transfers)
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.transferForm = this.formBuilder.group({
+            customerSend: ['', [Validators.required, Validators.min(1)]],
+            customerReceive: ['', [Validators.required, Validators.min(1)]],
+            amount: ['', [Validators.required, Validators.min(1)]],
+            description: ['', Validators.required],
+        });
+    }
+
+    get customerSend() {
+        return this.transferForm.get('customerSend');
+    }
+    get customerReceive() {
+        return this.transferForm.get('customerReceive');
+    }
+    get amount() {
+        return this.transferForm.get('amount');
+    }
+    get description() {
+        return this.transferForm.get('description');
+    }
+
+    open(content: any) {
+        this.modalService
+            .open(content, { ariaLabelledBy: 'modal-basic-title' })
+            .result.then((result) => {
+                this.closeResult = `Closed with: ${result}`;
+            });
+    }
+
+    async onSubmit() {
+        this.newTransfer = this.transferForm.value;
+
+        // stop here if form is invalid
+        if (this.transferForm.invalid) {
+            return;
+        }
+
+        let customerSendAccount: Account;
+        await getAccount(this.username, this.newTransfer.customerSend).then(
+            (response) => {
+                customerSendAccount = response[0];
+            }
+        );
+        let customerReceiveAccount: Account;
+        await getAccountWithoutUsername(
+            this.username,
+            this.newTransfer.customerReceive
+        ).then((response) => {
+            console.log(response);
+            customerReceiveAccount = response[0];
+        });
+
+        console.log(
+            'Send:',
+            customerSendAccount,
+            '-',
+            this.newTransfer.customerReceive
+        );
+        if (!customerReceiveAccount) {
+            console.log('Receive:', customerReceiveAccount);
+            let convertMoney: number = this.currencyService.convert(
+                customerSendAccount.currency,
+                customerReceiveAccount.currency,
+                this.newTransfer.amount
+            );
+            if (convertMoney > customerSendAccount.amount) {
+                alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
+                return;
+            } else {
+                let uniqueKey: number;
+                await getAccountKey(
+                    this.username,
+                    customerSendAccount.accountNumber
+                ).then((response) => {
+                    uniqueKey = response[0];
+                });
+
+                this.accountService.updateAccount(
+                    uniqueKey,
+                    customerSendAccount.amount - convertMoney
+                );
+            }
+        }
+
+        this.transferSErvice.addTransfer(
+            this.username,
+            this.newTransfer.customerSend,
+            this.newTransfer.customerReceive,
+            this.newTransfer.amount,
+            this.newTransfer.description
+        );
+    }
 
     logOut() {
         this.session.logOut();
