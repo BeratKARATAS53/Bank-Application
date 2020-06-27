@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 // components
 import { LoginPageComponent } from './pages/LoginPage/LoginPage.component';
-import { MainPageComponent } from './pages/MainPage/MainPage.component';
 import { TransfersPageComponent } from './pages/TransfersPage/TransfersPage.component';
 import { RegisterPageComponent } from './pages/RegisterPage/RegisterPage.component';
 import { AccountsPageComponent } from './pages/AccountsPage/AccountsPage.component';
@@ -12,12 +11,11 @@ import { AccountDetailPageComponent } from './pages/AccountDetailPage/AccountDet
 
 const routes: Routes = [
     { path: 'accounts', component: AccountsPageComponent },
-    { path: 'account/:id', component: AccountDetailPageComponent },
+    { path: 'account/:accountNumber', component: AccountDetailPageComponent },
     { path: 'transfers', component: TransfersPageComponent },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
-    { path: 'main', component: MainPageComponent },
-    { path: '', redirectTo: '/main', pathMatch: 'full' },
+    { path: '', redirectTo: '/accounts', pathMatch: 'full' },
 ];
 
 @NgModule({
@@ -32,5 +30,4 @@ export const routingComponent = [
     LoginPageComponent,
     RegisterPageComponent,
     TransfersPageComponent,
-    MainPageComponent,
 ];
