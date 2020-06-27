@@ -8,16 +8,13 @@
                     class="row card-group"
                     *ngIf="numberOfAccounts; else elseBlock"
                 >
-                    <div
-                        class="col-4"
-                        style="width: auto; height: auto;"
-                        *ngFor="let account of accounts"
-                    >
+                    <div class="col-4" *ngFor="let account of accounts">
                         <div class="card">
                             <div style="margin: 20px;">
                                 <h5 class="card-title">
-                                    {{ account.accountName }} (
-                                    {{ account.currency }})
+                                    {{ account.accountName }} ({{
+                                        account.currency
+                                    }})
                                 </h5>
                                 <p class="card-text">
                                     Hesap Numarası: {{ account.accountNumber }}
@@ -96,16 +93,19 @@
                         type="number"
                         formControlName="amount"
                         class="form-control"
+                        min="1"
                     />
                     <div
                         class="alert alert-danger"
                         *ngIf="
-                            accountName.errors &&
-                            (accountName.dirty || accountName.touched)
+                            amount.errors && (amount.dirty || amount.touched)
                         "
                     >
-                        <p *ngIf="accountName.errors.required">
+                        <p *ngIf="amount.errors.required">
                             Tutar Girmek Zorunlu!
+                        </p>
+                        <p *ngIf="amount.errors.min">
+                            Minimum 1 Birim Girmek Zorunlu!
                         </p>
                     </div>
                     <br />
@@ -117,8 +117,9 @@
                         <option
                             *ngFor="let account of accounts"
                             value="{{ account.accountNumber }}"
-                            >{{ account.accountNumber }} -
-                            {{ account.amount }}</option
+                            >Hesap No: {{ account.accountNumber }}, Bakiye:
+                            {{ account.amount }}, Para Birimi:
+                            {{ account.currency }}</option
                         >
                     </select>
                     <div

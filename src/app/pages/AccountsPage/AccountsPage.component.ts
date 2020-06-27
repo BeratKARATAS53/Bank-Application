@@ -1,3 +1,4 @@
+import { CurrencyConverterService } from './../../services/CurrencyConverter/CurrencyConverter.service';
 import { Account } from './../../models/Account';
 import {
     AccountService,
@@ -42,6 +43,7 @@ export class AccountsPageComponent implements OnInit {
         private router: Router,
         private session: SessionService,
         private accountService: AccountService,
+        private currencyService: CurrencyConverterService,
         private modalService: NgbModal
     ) {
         if (!session.getToken()) {
@@ -65,7 +67,7 @@ export class AccountsPageComponent implements OnInit {
     ngOnInit() {
         this.accountForm = this.formBuilder.group({
             accountName: ['', Validators.required],
-            amount: ['10000', Validators.required],
+            amount: ['10000', [Validators.required, Validators.min(1)]],
             currency: ['TL', Validators.required],
             otherAmount: [[]],
         });
@@ -74,17 +76,16 @@ export class AccountsPageComponent implements OnInit {
     get accountName() {
         return this.accountForm.get('accountName');
     }
-
     get amount() {
         return this.accountForm.get('amount');
     }
     get currency() {
         return this.accountForm.get('currency');
     }
-
     get otherAmount() {
         return this.accountForm.get('otherAmount');
     }
+
     open(content: any) {
         this.modalService
             .open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -106,8 +107,14 @@ export class AccountsPageComponent implements OnInit {
                     this.otherAccount = response[0];
                 }
             );
+                
+            let convertMoney: number = this.currencyService.convert(
+                this.otherAccount.currency,
+                this.newAccount.currency,
+                this.newAccount.amount
+            );
 
-            if (this.newAccount.amount > this.otherAccount.amount) {
+            if (convertMoney > this.otherAccount.amount) {
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
             } else {
@@ -118,9 +125,10 @@ export class AccountsPageComponent implements OnInit {
                 ).then((response) => {
                     uniqueKey = response[0];
                 });
+
                 this.accountService.updateAccount(
                     uniqueKey,
-                    this.otherAccount.amount - this.newAccount.amount
+                    this.otherAccount.amount - convertMoney
                 );
             }
         }
