@@ -17,7 +17,6 @@ export class AccountDetailPageComponent implements OnInit {
     account: Account;
     accountNumber: number;
     username: string;
-    numberOfAccounts: number;
 
     constructor(
         private route: ActivatedRoute,
@@ -30,8 +29,17 @@ export class AccountDetailPageComponent implements OnInit {
             this.router.navigateByUrl('/login');
         } else {
             // Eğer giriş yapan kullanıcı varsa token'dan kullanıcı adı bilgisi alınır.
-            this.username = this.session.getToken();
+            this.getFirst(session.getToken());
         }
+    }
+    async getFirst(username: string) {
+        this.username = this.session.getToken();
+        await getAccount(
+            this.username,
+            this.route.snapshot.params.accountNumber
+        ).then((resolve) => {
+            this.account = resolve[0];
+        });
     }
 
     ngOnInit() {}
