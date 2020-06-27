@@ -9,6 +9,7 @@ export class AccountService {
     ngOnInit() {}
 
     addAccount(
+        // Hesap Ekleme Fonksiyonu
         customerName: string,
         accountName: string,
         accountNumber: number,
@@ -18,38 +19,54 @@ export class AccountService {
         date: string
     ) {
         database.accounts
-            .where({ customerName: customerName, accountNumber: accountNumber })
-            .and((account) => account.amount >= amount)
-            .count()
-            .then((resolve) => {
-                database.accounts
-                    .put({
-                        customerName: customerName,
-                        accountName: accountName,
-                        accountNumber: accountNumber,
-                        amount: amount,
-                        currency: currency,
-                        rate: rate,
-                        date: date,
-                    })
-                    .then(() => {})
-                    .catch(function (error) {
-                        alert('Hata Oluştu: ' + error);
-                    });
-                if (resolve != 0) {
-                    alert('Yeni Hesap Eklendi.');
-                    window.location.reload();
-                } else {
-                    alert('Bakiyeniz Yetersiz!');
-                }
+            .put({
+                customerName: customerName,
+                accountName: accountName,
+                accountNumber: accountNumber,
+                amount: amount,
+                currency: currency,
+                rate: rate,
+                date: date,
+            })
+            .then(() => {
+                alert('Hesap Başarıyla Eklendi.');
+                window.location.reload();
             })
             .catch((error) => {
-                // console.log(error);
+                alert('Hata Oluştu: ' + error);
             });
     }
+    // updateAccount(
+    //     customerName: string,
+    //     accountName: string,
+    //     accountNumber: number,
+    //     amount: number,
+    //     currency: string,
+    //     rate: number,
+    //     date: string
+    // ) {
+    //     database.accounts
+    //         .update({
+    //             customerName: customerName,
+    //             accountName: accountName,
+    //             accountNumber: accountNumber,
+    //             amount: amount,
+    //             currency: currency,
+    //             rate: rate,
+    //             date: date,
+    //         })
+    //         .then(() => {
+    //             alert('Hesap Başarıyla Güncellendi.');
+    //             window.location.reload();
+    //         })
+    //         .catch((error) => {
+    //             alert('Hata Oluştu: ' + error);
+    //         });
+    // }
 }
 
 export async function userAccounts(username: string) {
+    // Kullanıcının Hesaplarını Getirme Fonksiyonu
     return await database.accounts
         .where('customerName')
         .equalsIgnoreCase(username)
@@ -57,22 +74,16 @@ export async function userAccounts(username: string) {
         .toArray();
 }
 export async function numberOfAccounts(username: string) {
+    // Kullanıcını Hesap Sayısını Bulma Fonksiyonu
     return await database.accounts
         .where('customerName')
         .equalsIgnoreCase(username)
         .count();
 }
 export async function getAccount(username: string, accountNumber: number) {
-    return await database.accounts.where({"customerName":username, "accountNumber":accountNumber}).toArray()
-}
-export async function userAccountsAboveTheAmount(
-    username: string,
-    amount: number
-) {
+    // Hesap Detayını Getirme Fonksiyonu
     return await database.accounts
-        .where('customerName')
-        .equalsIgnoreCase(username)
-        .and((account) => account.amount >= amount)
-        .reverse()
+        .where({ customerName: username })
+        .and((account) => account.accountNumber == accountNumber)
         .toArray();
 }
