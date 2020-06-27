@@ -1,12 +1,15 @@
 import { Account } from './../../models/Account';
-import { AccountService } from './../../services/AccountService/AccountService.service';
+import {
+    AccountService,
+    getAccount,
+} from './../../services/AccountService/AccountService.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {formatDate} from '@angular/common';
+import { formatDate } from '@angular/common';
 import {
     userAccounts,
     numberOfAccounts,
@@ -24,6 +27,7 @@ export class AccountsPageComponent implements OnInit {
     numberOfAccounts: number;
     newAccount = new Account();
     firstAccount: boolean = false;
+    otherAccount: Account;
 
     username: string;
     rate: number = 15;
@@ -61,11 +65,25 @@ export class AccountsPageComponent implements OnInit {
         this.accountForm = this.formBuilder.group({
             accountName: ['', Validators.required],
             amount: ['10000', Validators.required],
-            currency: ['', Validators.required],
-            otherAmount: [''],
+            currency: ['TL', Validators.required],
+            otherAmount: [[]],
         });
     }
 
+    get accountName() {
+        return this.accountForm.get('accountName');
+    }
+
+    get amount() {
+        return this.accountForm.get('amount');
+    }
+    get currency() {
+        return this.accountForm.get('currency');
+    }
+
+    get otherAmount() {
+        return this.accountForm.get('otherAmount');
+    }
     open(content: any) {
         this.modalService
             .open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -74,19 +92,30 @@ export class AccountsPageComponent implements OnInit {
             });
     }
 
-    onSubmit() {
+    async onSubmit() {
         this.newAccount = this.accountForm.value;
 
         // stop here if form is invalid
         if (this.accountForm.invalid) {
             return;
         }
+        if (this.numberOfAccounts !== 0) {
+            await getAccount(this.username, this.otherAmount.value).then(
+                (response) => {
+                    this.otherAccount = response[0];
+                }
+            );
+
+            if (this.newAccount.amount > this.otherAccount.amount) {
+                alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
+                return;
+            }
+        }
 
         let accountNumber = Math.floor(
             Math.random() * (999999 - 100000 + 1) + 100000
         );
 
-        
         this.accountService.addAccount(
             this.username,
             this.newAccount.accountName,
@@ -94,13 +123,12 @@ export class AccountsPageComponent implements OnInit {
             this.newAccount.amount,
             this.newAccount.currency,
             this.rate,
-            this.now,
-            
+            this.now
         );
     }
 
-    gotoDetails(id: any) {
-        this.router.navigate(['/account/', id]);
+    gotoDetails(accountNumber: any) {
+        this.router.navigate(['/account/', accountNumber]);
     }
 
     logOut() {

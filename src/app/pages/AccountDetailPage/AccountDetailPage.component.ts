@@ -30,21 +30,8 @@ export class AccountDetailPageComponent implements OnInit {
             this.router.navigateByUrl('/login');
         } else {
             // Eğer giriş yapan kullanıcı varsa token'dan kullanıcı adı bilgisi alınır.
-            this.getFirst(session.getToken());
+            this.username = this.session.getToken();
         }
-    }
-
-    async getFirst(username: string) {
-        this.username = this.session.getToken();
-        await numberOfAccounts(username).then(
-            (resolve) => (this.numberOfAccounts = resolve)
-        );
-        await getAccount(
-            this.username,
-            this.route.snapshot.params.accountNumber
-        ).then((resolve) => {
-            this.account = resolve[0];
-        });
     }
 
     ngOnInit() {}
