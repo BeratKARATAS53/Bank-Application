@@ -4,7 +4,7 @@
         <h2>Hesap Detayı</h2>
         <hr />
         <div class="row">
-            <div class="col-5">
+            <div class="col-3">
                 <h5>
                     Hesap Adı:
                     <span
@@ -24,6 +24,12 @@
                 <h5>
                     Bakiye:
                     <span>{{ account.amount }}</span>
+                </h5>
+            </div>
+            <div class="col-2">
+                <h5>
+                    Faiz Oranı:
+                    <span>%{{ account.rate }}</span>
                 </h5>
             </div>
             <div class="col-3">
