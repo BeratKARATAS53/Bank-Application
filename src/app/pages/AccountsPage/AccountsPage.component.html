@@ -13,17 +13,31 @@
                         style="width: auto; height: auto;"
                         *ngFor="let account of accounts"
                     >
-                        <div class="card account-card">
-                            <h5 class="card-title">
-                                {{ account.accountName }} (
-                                {{ account.currency }})
-                            </h5>
-                            <p class="card-text">
-                                Hesap Numarası: {{ account.accountNumber }}
-                            </p>
-                            <p class="card-text">
-                                Toplam Tutar: {{ account.amount }}
-                            </p>
+                        <div class="card">
+                            <div style="margin: 20px;">
+                                <h5 class="card-title">
+                                    {{ account.accountName }} (
+                                    {{ account.currency }})
+                                </h5>
+                                <p class="card-text">
+                                    Hesap Numarası: {{ account.accountNumber }}
+                                </p>
+                                <p class="card-text">
+                                    Faiz Oranı: %{{ account.rate }}
+                                </p>
+                                <p class="card-text">
+                                    Toplam Tutar: {{ account.amount }}
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                (click)="deleteAccount(account.accountNumber)"
+                                *ngIf="account.amount == 0"
+                            >
+                                Hesabı Sil
+                            </button>
                             <button
                                 type="button"
                                 class="btn btn-primary"

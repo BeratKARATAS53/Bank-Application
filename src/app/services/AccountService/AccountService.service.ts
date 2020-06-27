@@ -36,33 +36,28 @@ export class AccountService {
                 alert('Hata Oluştu: ' + error);
             });
     }
-    // updateAccount(
-    //     customerName: string,
-    //     accountName: string,
-    //     accountNumber: number,
-    //     amount: number,
-    //     currency: string,
-    //     rate: number,
-    //     date: string
-    // ) {
-    //     database.accounts
-    //         .update({
-    //             customerName: customerName,
-    //             accountName: accountName,
-    //             accountNumber: accountNumber,
-    //             amount: amount,
-    //             currency: currency,
-    //             rate: rate,
-    //             date: date,
-    //         })
-    //         .then(() => {
-    //             alert('Hesap Başarıyla Güncellendi.');
-    //             window.location.reload();
-    //         })
-    //         .catch((error) => {
-    //             alert('Hata Oluştu: ' + error);
-    //         });
-    // }
+
+    updateAccount(accountID: number, amount: number) {
+        database.accounts
+            .update(accountID, {
+                amount: amount,
+            })
+            .then(() => {})
+            .catch((error) => {
+                alert('Hata Oluştu: ' + error);
+            });
+    }
+    deleteAccount(accountID: number) {
+        database.accounts
+            .delete(accountID)
+            .then(() => {
+                alert('Hesap Başarıyla Silindi.');
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert('Hata Oluştu: ' + error);
+            });
+    }
 }
 
 export async function userAccounts(username: string) {
@@ -79,6 +74,13 @@ export async function numberOfAccounts(username: string) {
         .where('customerName')
         .equalsIgnoreCase(username)
         .count();
+}
+export async function getAccountKey(username: string, accountNumber: number) {
+    // Hesabın Primary Key'ini Getirme Fonksiyonu
+    return await database.accounts
+        .where({ customerName: username })
+        .and((account) => account.accountNumber == accountNumber)
+        .primaryKeys();
 }
 export async function getAccount(username: string, accountNumber: number) {
     // Hesap Detayını Getirme Fonksiyonu

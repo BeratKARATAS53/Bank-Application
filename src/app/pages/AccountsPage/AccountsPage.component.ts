@@ -13,6 +13,7 @@ import { formatDate } from '@angular/common';
 import {
     userAccounts,
     numberOfAccounts,
+    getAccountKey,
 } from '../../services/AccountService/AccountService.service';
 
 @Component({
@@ -109,6 +110,18 @@ export class AccountsPageComponent implements OnInit {
             if (this.newAccount.amount > this.otherAccount.amount) {
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
+            } else {
+                let uniqueKey: number;
+                await getAccountKey(
+                    this.username,
+                    this.otherAccount.accountNumber
+                ).then((response) => {
+                    uniqueKey = response[0];
+                });
+                this.accountService.updateAccount(
+                    uniqueKey,
+                    this.otherAccount.amount - this.newAccount.amount
+                );
             }
         }
 
@@ -125,6 +138,14 @@ export class AccountsPageComponent implements OnInit {
             this.rate,
             this.now
         );
+    }
+
+    async deleteAccount(accountNumber: number) {
+        let uniqueKey: number;
+        await getAccountKey(this.username, accountNumber).then((response) => {
+            uniqueKey = response[0];
+        });
+        this.accountService.deleteAccount(uniqueKey);
     }
 
     gotoDetails(accountNumber: any) {
