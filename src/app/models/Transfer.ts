@@ -4,4 +4,9 @@ export class Transfer {
     customerReceive: number;
     amount: number;
     description: string;
+    date: string;
+    customerReceiveAccountName: string;
+    customerSendAccountAmount: number;
+    customerSendAccountCurrency: string;
+
 }

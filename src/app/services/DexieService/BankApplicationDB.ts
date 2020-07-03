@@ -18,7 +18,7 @@ export class BankApplicationDB extends Dexie {
             accounts:
                 '++id,customerName,accountName,&accountNumber,amount,currency,rate,date',
             transfers:
-                '++id,customerName,customerSend,customerReceive,amount,description',
+                '++id,customerName,customerSend,customerReceive,amount,description,date,customerReceiveAccountName,customerSendAccountAmount,customerSendAccountCurrency',
         });
 
         // Let's physically map Contact class to contacts table.

@@ -1,4 +1,4 @@
-import { AccountService } from './../AccountService/AccountService.service';
+import { getAccount } from './../AccountService/AccountService.service';
 import { Injectable } from '@angular/core';
 import { database } from '../DexieService/BankApplicationDB';
 
@@ -6,7 +6,7 @@ import { database } from '../DexieService/BankApplicationDB';
     providedIn: 'root',
 })
 export class TransferService {
-    constructor(private accountService: AccountService) {}
+    constructor() {}
 
     addTransfer(
         // Transfer Ekleme Fonksiyonu
@@ -14,7 +14,11 @@ export class TransferService {
         customerSend: number,
         customerReceive: number,
         amount: number,
-        description: string
+        description: string,
+        date: string,
+        customerReceiveAccountName: string,
+        customerSendAccountAmount: number,
+        customerSendAccountCurrency: string
     ) {
         database.transfers
             .put({
@@ -23,6 +27,10 @@ export class TransferService {
                 customerReceive: customerReceive,
                 amount: amount,
                 description: description,
+                date: date,
+                customerReceiveAccountName: customerReceiveAccountName,
+                customerSendAccountAmount: customerSendAccountAmount,
+                customerSendAccountCurrency: customerSendAccountCurrency,
             })
             .then(() => {
                 alert('Transfer Başarıyla Eklendi.');
@@ -39,6 +47,17 @@ export async function userTransfers(username: string) {
     return await database.transfers
         .where('customerName')
         .equalsIgnoreCase(username)
+        .reverse()
+        .toArray();
+}
+export async function userAccountTransfers(
+    username: string,
+    accountNumber: number
+) {
+    // Kullanıcının Tek Bir Hesabına Ait Transfer Bilgilerini Getirme Fonksiyonu
+    return await database.transfers
+        .where({ customerName: username })
+        .and((transfer) => transfer.customerSend == accountNumber)
         .reverse()
         .toArray();
 }

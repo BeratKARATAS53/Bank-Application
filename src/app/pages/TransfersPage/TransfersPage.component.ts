@@ -17,6 +17,7 @@ import { Component, OnInit } from '@angular/core';
 import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { formatDate } from '@angular/common';
 
 @Component({
     selector: 'app-TransfersPage',
@@ -35,6 +36,7 @@ export class TransfersPageComponent implements OnInit {
     rate: number = 15;
 
     closeResult: string;
+    now = formatDate(new Date(), 'dd/MM/yyyy', 'en');
 
     constructor(
         private formBuilder: FormBuilder,
@@ -113,17 +115,25 @@ export class TransfersPageComponent implements OnInit {
         await getAccountWithoutUsername(
             this.username,
             this.newTransfer.customerReceive
-        ).then((response) => {
-            console.log(response);
-            customerReceiveAccount = response[0];
-        });
-        if (customerReceiveAccount) {
-            let convertMoney: number = this.currencyService.convert(
+        )
+            .then((response) => {
+                if (response.length === 0) {
+                    alert('Alan Kullanıcı Hesabı Bulunamadı!');
+                    return;
+                } else {
+                    customerReceiveAccount = response[0];
+                }
+            })
+            .catch((error) => console.log(error));
+
+        let convertMoney: number;
+        if (customerReceiveAccount !== null) {
+            convertMoney = this.currencyService.convertForAddTransfer(
                 customerSendAccount.currency,
                 customerReceiveAccount.currency,
                 this.newTransfer.amount
             );
-            if (convertMoney > customerSendAccount.amount) {
+            if (this.newTransfer.amount > customerSendAccount.amount) {
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
             } else {
@@ -144,11 +154,11 @@ export class TransfersPageComponent implements OnInit {
                 this.accountService.updateAccountByTransfer(
                     customerSendKey,
                     customerReceiveKey,
-                    customerSendAccount.amount - convertMoney,
-                    customerReceiveAccount.amount + this.newTransfer.amount
+                    customerSendAccount.amount - this.newTransfer.amount,
+                    customerReceiveAccount.amount + convertMoney
                 );
+                console.log(convertMoney);
             }
-            console.log(customerReceiveAccount);
             console.log(customerSendAccount);
         }
 
@@ -157,7 +167,11 @@ export class TransfersPageComponent implements OnInit {
             this.newTransfer.customerSend,
             this.newTransfer.customerReceive,
             this.newTransfer.amount,
-            this.newTransfer.description
+            this.newTransfer.description,
+            this.now,
+            customerSendAccount.accountName,
+            customerSendAccount.amount - convertMoney,
+            customerSendAccount.currency
         );
     }
 

@@ -5,13 +5,15 @@
             <div class="col-10">
                 <h2>Transferlerim</h2>
                 <div *ngIf="transfers.length !== 0; else noTransfer">
-                    <table class="table">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
                         <tr>
                             <th>Gönderen Hesap Numarası</th>
                             <th>Alan Hesap Numarası</th>
                             <th>Tutar</th>
                             <th>Açıklama</th>
                         </tr>
+                        </thead>
                         <tr *ngFor="let transfer of transfers">
                             <td>{{ transfer.customerSend }}</td>
                             <td>{{ transfer.customerReceive }}</td>
