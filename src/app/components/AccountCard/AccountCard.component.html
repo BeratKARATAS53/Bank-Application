@@ -10,7 +10,7 @@
                 </p>
                 <p class="card-text">Faiz Oranı: %{{ account.rate }}</p>
                 <p class="card-text">
-                    Toplam Tutar: {{ account.amount | number: ".2" }}
+                    Toplam Tutar: {{ account.amount | myCurrency }}
                 </p>
             </div>
 
