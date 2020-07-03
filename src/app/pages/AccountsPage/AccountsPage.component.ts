@@ -106,7 +106,7 @@ export class AccountsPageComponent implements OnInit {
                 }
             );
 
-            let convertMoney: number = this.currencyService.convert(
+            let convertMoney: number = this.currencyService.convertForAddAccount(
                 this.otherAccount.currency,
                 this.newAccount.currency,
                 this.newAccount.amount

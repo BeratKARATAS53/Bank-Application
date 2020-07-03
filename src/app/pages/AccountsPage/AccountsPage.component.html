@@ -17,6 +17,7 @@
                                 <th>Para Birimi</th>
                                 <th>Toplam Tutar</th>
                                 <th>Oluşturulma Tarihi</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tr *ngFor="let account of accounts">
@@ -25,6 +26,15 @@
                             <td>{{ account.currency }}</td>
                             <td>{{ account.amount }}</td>
                             <td>{{ account.date }}</td>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    (click)="gotoDetails(account.accountNumber)"
+                                >
+                                    Ayrıntılar
+                                </button>
+                            </td>
                         </tr>
                     </table>
                 </div>
