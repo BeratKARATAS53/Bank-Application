@@ -1,9 +1,5 @@
 import { CurrencyConverterService } from './../../services/CurrencyConverter/CurrencyConverter.service';
 import { Account } from './../../models/Account';
-import {
-    AccountService,
-    getAccount,
-} from './../../services/AccountService/AccountService.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,9 +8,11 @@ import { SessionService } from 'src/app/services/SessionService/SessionService.s
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { formatDate } from '@angular/common';
 import {
+    getAccount,
     userAccounts,
     numberOfAccounts,
     getAccountKey,
+    AccountService,
 } from '../../services/AccountService/AccountService.service';
 
 @Component({
@@ -107,7 +105,7 @@ export class AccountsPageComponent implements OnInit {
                     this.otherAccount = response[0];
                 }
             );
-                
+
             let convertMoney: number = this.currencyService.convert(
                 this.otherAccount.currency,
                 this.newAccount.currency,
@@ -132,6 +130,7 @@ export class AccountsPageComponent implements OnInit {
                 );
             }
         }
+        console.log(this.newAccount);
 
         let accountNumber = Math.floor(
             Math.random() * (999999 - 100000 + 1) + 100000
