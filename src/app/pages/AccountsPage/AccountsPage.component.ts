@@ -118,7 +118,6 @@ export class AccountsPageComponent implements OnInit {
             } else {
                 let uniqueKey: number;
                 await getAccountKey(
-                    this.username,
                     this.otherAccount.accountNumber
                 ).then((response) => {
                     uniqueKey = response[0];
@@ -149,7 +148,7 @@ export class AccountsPageComponent implements OnInit {
 
     async deleteAccount(accountNumber: number) {
         let uniqueKey: number;
-        await getAccountKey(this.username, accountNumber).then((response) => {
+        await getAccountKey(accountNumber).then((response) => {
             uniqueKey = response[0];
         });
         this.accountService.deleteAccount(uniqueKey);

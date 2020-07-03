@@ -51,8 +51,9 @@ export class AccountCardComponent implements OnInit {
 
     async deleteAccount(accountNumber: number) {
         let uniqueKey: number;
-        await getAccountKey(this.username, accountNumber).then((response) => {
+        await getAccountKey(accountNumber).then((response) => {
             uniqueKey = response[0];
+            console.log(response)
         });
         this.accountService.deleteAccount(uniqueKey);
     }
