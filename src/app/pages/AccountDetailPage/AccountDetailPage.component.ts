@@ -1,9 +1,11 @@
-import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 import {
     AccountService,
-    numberOfAccounts,
-    getAccount,
-} from 'src/app/services/AccountService/AccountService.service';
+    getAccountName,
+} from './../../services/AccountService/AccountService.service';
+import { Transfer } from './../../models/Transfer';
+import { userAccountTransfers } from './../../services/TransferService/TransferService.service';
+import { SessionService } from 'src/app/services/SessionService/SessionService.service';
+import { getAccount } from 'src/app/services/AccountService/AccountService.service';
 import { Account } from './../../models/Account';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -17,6 +19,8 @@ export class AccountDetailPageComponent implements OnInit {
     account: Account;
     accountNumber: number;
     username: string;
+
+    accountTransfers: Transfer[];
 
     constructor(
         private route: ActivatedRoute,
@@ -33,16 +37,30 @@ export class AccountDetailPageComponent implements OnInit {
         }
     }
     async getFirst(username: string) {
-        this.username = this.session.getToken();
         await getAccount(
-            this.username,
+            username,
             this.route.snapshot.params.accountNumber
         ).then((resolve) => {
             this.account = resolve[0];
         });
+        await userAccountTransfers(
+            username,
+            this.route.snapshot.params.accountNumber
+        ).then((response) => {
+            this.accountTransfers = response;
+        });
     }
 
     ngOnInit() {}
+
+    // async getAccountNameWithAccountNumber(accountNumber: number) {
+    //     let accountName: string;
+
+    //     await getAccountName(accountNumber).then((response) => {
+    //         accountName = response[0].accountName;
+    //     });
+    //     return accountName;
+    // }
 
     logOut() {
         this.session.logOut();
