@@ -2,8 +2,8 @@ import {
     getAccount,
     getAccountKey,
     AccountService,
-    getAccountWithoutUsername,
     userAccounts,
+    getAccountAnotherUser,
 } from 'src/app/services/AccountService/AccountService.service';
 import { CurrencyConverterService } from './../../services/CurrencyConverter/CurrencyConverter.service';
 import { Account } from './../../models/Account';
@@ -18,6 +18,7 @@ import { SessionService } from 'src/app/services/SessionService/SessionService.s
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
+import { stringify } from 'querystring';
 
 @Component({
     selector: 'app-TransfersPage',
@@ -31,6 +32,7 @@ export class TransfersPageComponent implements OnInit {
     newTransfer = new Transfer();
 
     accounts: Account[];
+    userAnotherAccounts: Account[];
 
     username: string;
     rate: number = 15;
@@ -40,7 +42,7 @@ export class TransfersPageComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
+        public route: ActivatedRoute,
         private router: Router,
         private session: SessionService,
         private transferSErvice: TransferService,
@@ -89,7 +91,8 @@ export class TransfersPageComponent implements OnInit {
         return this.transferForm.get('description');
     }
 
-    open(content: any) {
+    open(content: any, transferType: string) {
+        this.addParamToURL(transferType);
         this.modalService
             .open(content, { ariaLabelledBy: 'modal-basic-title' })
             .result.then((result) => {
@@ -99,6 +102,7 @@ export class TransfersPageComponent implements OnInit {
 
     async onSubmit() {
         this.newTransfer = this.transferForm.value;
+        console.log(this.newTransfer);
 
         // stop here if form is invalid
         if (this.transferForm.invalid) {
@@ -108,23 +112,37 @@ export class TransfersPageComponent implements OnInit {
         let customerSendAccount: Account;
         await getAccount(this.username, this.newTransfer.customerSend).then(
             (response) => {
+                console.log(response);
                 customerSendAccount = response[0];
             }
         );
+        console.log('Send:', customerSendAccount);
         let customerReceiveAccount: Account;
-        await getAccountWithoutUsername(
-            this.username,
-            this.newTransfer.customerReceive
-        )
-            .then((response) => {
-                if (response.length === 0) {
-                    alert('Alan Kullanıcı Hesabı Bulunamadı!');
-                    return;
-                } else {
-                    customerReceiveAccount = response[0];
-                }
-            })
-            .catch((error) => console.log(error));
+        if (this.getParamFromURL() === 'Virman') {
+            console.log('virman');
+            await getAccount(
+                this.username,
+                this.newTransfer.customerReceive
+            ).then((response) => {
+                customerReceiveAccount = response[0];
+            });
+        } else {
+            console.log('eft');
+            await getAccountAnotherUser(
+                this.username,
+                this.newTransfer.customerReceive
+            )
+                .then((response) => {
+                    if (response.length === 0) {
+                        alert('Alan Kullanıcı Hesabı Bulunamadı!');
+                        return;
+                    } else {
+                        customerReceiveAccount = response[0];
+                    }
+                })
+                .catch((error) => console.log(error));
+        }
+        console.log('Receive:', customerReceiveAccount);
 
         let convertMoney: number;
         if (customerReceiveAccount !== null) {
@@ -163,10 +181,11 @@ export class TransfersPageComponent implements OnInit {
         }
 
         this.transferSErvice.addTransfer(
+            this.getParamFromURL(),
             this.username,
             this.newTransfer.customerSend,
             this.newTransfer.customerReceive,
-            this.newTransfer.amount,
+            0 - this.newTransfer.amount,
             this.newTransfer.description,
             this.now,
             customerSendAccount.accountName,
@@ -175,6 +194,21 @@ export class TransfersPageComponent implements OnInit {
         );
     }
 
+    addParamToURL(transferType: string) {
+        this.router.navigate([], {
+            queryParams: {
+                transferType: transferType,
+            },
+            queryParamsHandling: 'merge',
+        });
+    }
+    getParamFromURL(): string {
+        let transferType: string;
+        this.route.queryParams.subscribe((params) => {
+            transferType = params['transferType'];
+        });
+        return transferType;
+    }
     logOut() {
         this.session.logOut();
     }

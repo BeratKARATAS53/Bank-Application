@@ -37,6 +37,7 @@ export class AccountDetailPageComponent implements OnInit {
         }
     }
     async getFirst(username: string) {
+        this.username = this.session.getToken();
         await getAccount(
             username,
             this.route.snapshot.params.accountNumber

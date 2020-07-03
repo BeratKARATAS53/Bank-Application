@@ -44,16 +44,19 @@
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Alan Hesap Adı:</th>
-                    <th>Para Birimi:</th>
-                    <th>Tutar:</th>
-                    <th>Açıklama:</th>
-                    <th>Bakiye:</th>
-                    <th>Tarih:</th>
+                    <th>Alıcı Hesabı</th>
+                    <th>Para Birimi</th>
+                    <th>Tutar</th>
+                    <th>Açıklama</th>
+                    <th>Kalan Bakiye</th>
+                    <th>Tarih</th>
                 </tr>
             </thead>
             <tr *ngFor="let transfer of accountTransfers">
-                <td>{{ transfer.customerReceiveAccountName }}</td>
+                <td *ngIf="transfer.transferType === 'Havale'; else elseblock">
+                    {{ transfer.customerReceiveAccountName }}
+                </td>
+                <td #elseblock>{{ transfer.customerReceive }}</td>
                 <td>{{ transfer.customerSendAccountCurrency }}</td>
                 <td>{{ transfer.amount }}</td>
                 <td>{{ transfer.description }}</td>
