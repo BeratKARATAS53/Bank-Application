@@ -10,6 +10,7 @@ export class TransferService {
 
     addTransfer(
         // Transfer Ekleme Fonksiyonu
+        transferType: string,
         customerName: string,
         customerSend: number,
         customerReceive: number,
@@ -17,11 +18,13 @@ export class TransferService {
         description: string,
         date: string,
         customerReceiveAccountName: string,
+        customerSendAccountName: string,
         customerSendAccountAmount: number,
         customerSendAccountCurrency: string
     ) {
         database.transfers
             .put({
+                transferType: transferType,
                 customerName: customerName,
                 customerSend: customerSend,
                 customerReceive: customerReceive,
@@ -29,12 +32,13 @@ export class TransferService {
                 description: description,
                 date: date,
                 customerReceiveAccountName: customerReceiveAccountName,
+                customerSendAccountName: customerSendAccountName,
                 customerSendAccountAmount: customerSendAccountAmount,
                 customerSendAccountCurrency: customerSendAccountCurrency,
             })
             .then(() => {
                 alert('Transfer Başarıyla Eklendi.');
-                // window.location.reload();
+                window.location.reload();
             })
             .catch((error) => {
                 alert('Hata Oluştu: ' + error);
@@ -49,6 +53,13 @@ export async function userTransfers(username: string) {
         .equalsIgnoreCase(username)
         .reverse()
         .toArray();
+}
+export async function userTransfersLimitTen(username: string) {
+    // Kullanıcının Transferlerini Getirme Fonksiyonu
+    return await database.transfers
+        .where('customerName')
+        .equalsIgnoreCase(username)
+        .reverse().limit(10).toArray()
 }
 export async function userAccountTransfers(
     username: string,

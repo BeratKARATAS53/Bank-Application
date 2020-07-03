@@ -185,11 +185,12 @@ export class TransfersPageComponent implements OnInit {
             this.username,
             this.newTransfer.customerSend,
             this.newTransfer.customerReceive,
-            0 - this.newTransfer.amount,
+            this.newTransfer.amount,
             this.newTransfer.description,
             this.now,
+            customerReceiveAccount.accountName,
             customerSendAccount.accountName,
-            customerSendAccount.amount - convertMoney,
+            customerSendAccount.amount - this.newTransfer.amount,
             customerSendAccount.currency
         );
     }
