@@ -42,9 +42,37 @@ export class AccountService {
             .update(accountID, {
                 amount: amount,
             })
-            .then(() => {})
+            .then((response) => {
+                console.log('Güncellendi', '-', response);
+            })
             .catch((error) => {
                 alert('Hata Oluştu: ' + error);
+            });
+    }
+    updateAccountByTransfer(
+        sendId: number,
+        receiveId: number,
+        amountSend: number,
+        amountReceive: number
+    ) {
+        database.accounts
+            .update(sendId, {
+                amount: amountSend,
+            })
+            .then((response) => {
+                database.accounts
+                    .update(receiveId, {
+                        amount: amountReceive,
+                    })
+                    .then((response) => {
+                        console.log('Güncellendi, Alıcı', '-', response);
+                    })
+                    .catch((err) => console.log('Alan Kullanıcı Hatası', err));
+
+                console.log('Güncellendi, Gönderen', '-', response);
+            })
+            .catch((error) => {
+                alert('Gönderen Kullanıcı Hatası: ' + error);
             });
     }
     deleteAccount(accountID: number) {
@@ -75,11 +103,11 @@ export async function numberOfAccounts(username: string) {
         .equalsIgnoreCase(username)
         .count();
 }
-export async function getAccountKey(username: string, accountNumber: number) {
+export async function getAccountKey(accountNumber: number) {
     // Hesabın Primary Key'ini Getirme Fonksiyonu
     return await database.accounts
-        .where({ customerName: username })
-        .and((account) => account.accountNumber == accountNumber)
+        .where('accountNumber')
+        .equals(accountNumber)
         .primaryKeys();
 }
 export async function getAccount(username: string, accountNumber: number) {
