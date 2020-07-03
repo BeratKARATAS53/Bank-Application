@@ -16,7 +16,7 @@ export class BankApplicationDB extends Dexie {
         db.version(1).stores({
             customers: '++id,&username,password',
             accounts:
-                '++id,customerName,accountName,accountNumber,amount,currency,rate,date',
+                '++id,customerName,accountName,&accountNumber,amount,currency,rate,date',
             transfers:
                 '++id,customerName,customerSend,customerReceive,amount,description',
         });
