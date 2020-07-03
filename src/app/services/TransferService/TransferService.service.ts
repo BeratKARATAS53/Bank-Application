@@ -1,3 +1,4 @@
+import { AccountService } from './../AccountService/AccountService.service';
 import { Injectable } from '@angular/core';
 import { database } from '../DexieService/BankApplicationDB';
 
@@ -5,7 +6,7 @@ import { database } from '../DexieService/BankApplicationDB';
     providedIn: 'root',
 })
 export class TransferService {
-    constructor() {}
+    constructor(private accountService: AccountService) {}
 
     addTransfer(
         // Transfer Ekleme Fonksiyonu
@@ -25,7 +26,7 @@ export class TransferService {
             })
             .then(() => {
                 alert('Transfer Başarıyla Eklendi.');
-                window.location.reload();
+                // window.location.reload();
             })
             .catch((error) => {
                 alert('Hata Oluştu: ' + error);

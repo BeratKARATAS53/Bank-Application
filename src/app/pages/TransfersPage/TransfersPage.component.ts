@@ -3,6 +3,7 @@ import {
     getAccountKey,
     AccountService,
     getAccountWithoutUsername,
+    userAccounts,
 } from 'src/app/services/AccountService/AccountService.service';
 import { CurrencyConverterService } from './../../services/CurrencyConverter/CurrencyConverter.service';
 import { Account } from './../../models/Account';
@@ -55,10 +56,13 @@ export class TransfersPageComponent implements OnInit {
 
     async getFirst(username: string) {
         this.username = this.session.getToken();
+        await userAccounts(username).then(
+            (resolve) => (this.accounts = resolve)
+        );
         await userTransfers(username).then(
             (resolve) => (this.transfers = resolve)
         );
-        console.log(this.transfers)
+        console.log(this.transfers);
     }
 
     ngOnInit() {
@@ -113,15 +117,7 @@ export class TransfersPageComponent implements OnInit {
             console.log(response);
             customerReceiveAccount = response[0];
         });
-
-        console.log(
-            'Send:',
-            customerSendAccount,
-            '-',
-            this.newTransfer.customerReceive
-        );
-        if (!customerReceiveAccount) {
-            console.log('Receive:', customerReceiveAccount);
+        if (customerReceiveAccount) {
             let convertMoney: number = this.currencyService.convert(
                 customerSendAccount.currency,
                 customerReceiveAccount.currency,
@@ -131,19 +127,29 @@ export class TransfersPageComponent implements OnInit {
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
             } else {
-                let uniqueKey: number;
-                await getAccountKey(
-                    this.username,
-                    customerSendAccount.accountNumber
-                ).then((response) => {
-                    uniqueKey = response[0];
-                });
+                console.log('else');
+                let customerSendKey: number;
+                await getAccountKey(customerSendAccount.accountNumber).then(
+                    (response) => {
+                        customerSendKey = response[0];
+                    }
+                );
+                let customerReceiveKey: number;
+                await getAccountKey(customerReceiveAccount.accountNumber).then(
+                    (response) => {
+                        customerReceiveKey = response[0];
+                    }
+                );
 
-                this.accountService.updateAccount(
-                    uniqueKey,
-                    customerSendAccount.amount - convertMoney
+                this.accountService.updateAccountByTransfer(
+                    customerSendKey,
+                    customerReceiveKey,
+                    customerSendAccount.amount - convertMoney,
+                    customerReceiveAccount.amount + this.newTransfer.amount
                 );
             }
+            console.log(customerReceiveAccount);
+            console.log(customerSendAccount);
         }
 
         this.transferSErvice.addTransfer(
