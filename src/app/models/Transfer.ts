@@ -1,12 +1,14 @@
 export class Transfer {
-    customerName: string;
-    customerSend: number;
-    customerReceive: number;
+    transferType: string;
+    cSendName: string;
+    cSendAccountName: string;
+    cSendAccountNumber: number;
+    cSendAccountAmount: number;
+    cSendAccountCurrency: string;
+    cReceiveName: string;
+    cReceiveAccountName: string;
+    cReceiveAccountNumber: number;
     amount: number;
     description: string;
     date: string;
-    customerReceiveAccountName: string;
-    customerSendAccountAmount: number;
-    customerSendAccountCurrency: string;
-
 }

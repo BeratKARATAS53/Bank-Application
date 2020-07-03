@@ -9,7 +9,8 @@ import { CurrencyConverterService } from './../../services/CurrencyConverter/Cur
 import { Account } from './../../models/Account';
 import {
     TransferService,
-    userTransfers,
+    userSendTransfers,
+    userReceiveTransfers,
 } from './../../services/TransferService/TransferService.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Transfer } from './../../models/Transfer';
@@ -28,7 +29,8 @@ import { stringify } from 'querystring';
 export class TransfersPageComponent implements OnInit {
     transferForm: FormGroup;
 
-    transfers: Transfer[];
+    sendTransfers: Transfer[];
+    receiveTransfers: Transfer[];
     newTransfer = new Transfer();
 
     accounts: Account[];
@@ -63,26 +65,31 @@ export class TransfersPageComponent implements OnInit {
         await userAccounts(username).then(
             (resolve) => (this.accounts = resolve)
         );
-        await userTransfers(username).then(
-            (resolve) => (this.transfers = resolve)
+        await userSendTransfers(username).then(
+            (resolve) => (this.sendTransfers = resolve)
         );
-        console.log(this.transfers);
+        await userReceiveTransfers(username).then(
+            (resolve) => (this.receiveTransfers = resolve)
+        );
     }
 
     ngOnInit() {
         this.transferForm = this.formBuilder.group({
-            customerSend: ['', [Validators.required, Validators.min(1)]],
-            customerReceive: ['', [Validators.required, Validators.min(1)]],
+            cSendAccountNumber: ['', [Validators.required, Validators.min(1)]],
+            cReceiveAccountNumber: [
+                '',
+                [Validators.required, Validators.min(1)],
+            ],
             amount: ['', [Validators.required, Validators.min(1)]],
             description: ['', Validators.required],
         });
     }
 
-    get customerSend() {
-        return this.transferForm.get('customerSend');
+    get cSendAccountNumber() {
+        return this.transferForm.get('cSendAccountNumber');
     }
-    get customerReceive() {
-        return this.transferForm.get('customerReceive');
+    get cReceiveAccountNumber() {
+        return this.transferForm.get('cReceiveAccountNumber');
     }
     get amount() {
         return this.transferForm.get('amount');
@@ -110,19 +117,20 @@ export class TransfersPageComponent implements OnInit {
         }
 
         let customerSendAccount: Account;
-        await getAccount(this.username, this.newTransfer.customerSend).then(
-            (response) => {
-                console.log(response);
-                customerSendAccount = response[0];
-            }
-        );
+        await getAccount(
+            this.username,
+            this.newTransfer.cSendAccountNumber
+        ).then((response) => {
+            console.log(response);
+            customerSendAccount = response[0];
+        });
         console.log('Send:', customerSendAccount);
         let customerReceiveAccount: Account;
         if (this.getParamFromURL() === 'Virman') {
             console.log('virman');
             await getAccount(
                 this.username,
-                this.newTransfer.customerReceive
+                this.newTransfer.cReceiveAccountNumber
             ).then((response) => {
                 customerReceiveAccount = response[0];
             });
@@ -130,7 +138,7 @@ export class TransfersPageComponent implements OnInit {
             console.log('eft');
             await getAccountAnotherUser(
                 this.username,
-                this.newTransfer.customerReceive
+                this.newTransfer.cReceiveAccountNumber
             )
                 .then((response) => {
                     if (response.length === 0) {
@@ -183,15 +191,16 @@ export class TransfersPageComponent implements OnInit {
         this.transferSErvice.addTransfer(
             this.getParamFromURL(),
             this.username,
-            this.newTransfer.customerSend,
-            this.newTransfer.customerReceive,
-            this.newTransfer.amount,
-            this.newTransfer.description,
-            this.now,
-            customerReceiveAccount.accountName,
             customerSendAccount.accountName,
+            customerSendAccount.accountNumber,
             customerSendAccount.amount - this.newTransfer.amount,
-            customerSendAccount.currency
+            customerSendAccount.currency,
+            customerReceiveAccount.customerName,
+            customerReceiveAccount.accountName,
+            customerReceiveAccount.accountNumber,
+            -this.newTransfer.amount,
+            this.newTransfer.description,
+            this.now
         );
     }
 
@@ -203,6 +212,7 @@ export class TransfersPageComponent implements OnInit {
             queryParamsHandling: 'merge',
         });
     }
+
     getParamFromURL(): string {
         let transferType: string;
         this.route.queryParams.subscribe((params) => {
@@ -210,6 +220,7 @@ export class TransfersPageComponent implements OnInit {
         });
         return transferType;
     }
+
     logOut() {
         this.session.logOut();
     }

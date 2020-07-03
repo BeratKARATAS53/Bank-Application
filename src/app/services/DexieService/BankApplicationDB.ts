@@ -18,7 +18,7 @@ export class BankApplicationDB extends Dexie {
             accounts:
                 '++id,customerName,accountName,&accountNumber,amount,currency,rate,date',
             transfers:
-                '++id,transferType,customerName,customerSend,customerReceive,amount,description,date,customerReceiveAccountName,customerSendAccountName,customerSendAccountAmount,customerSendAccountCurrency',
+                '++id,transferType,cSendName,cSendAccountName,cSendAccountNumber,cSendAccountAmount,cSendAccountCurrency,cReceiveName,cReceiveAccountName,cReceiveAccountNumber,amount,description,date',
         });
 
         db.customers.mapToClass(Customer);

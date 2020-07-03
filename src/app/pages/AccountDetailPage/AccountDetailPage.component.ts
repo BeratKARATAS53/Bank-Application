@@ -1,9 +1,8 @@
 import {
     AccountService,
-    getAccountName,
 } from './../../services/AccountService/AccountService.service';
 import { Transfer } from './../../models/Transfer';
-import { userAccountTransfers } from './../../services/TransferService/TransferService.service';
+import { userAccountSendTransfers, userAccountReceiveTransfers } from './../../services/TransferService/TransferService.service';
 import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 import { getAccount } from 'src/app/services/AccountService/AccountService.service';
 import { Account } from './../../models/Account';
@@ -20,7 +19,8 @@ export class AccountDetailPageComponent implements OnInit {
     accountNumber: number;
     username: string;
 
-    accountTransfers: Transfer[];
+    accountSendTransfers: Transfer[];
+    accountReceiveTransfers: Transfer[];
 
     constructor(
         private route: ActivatedRoute,
@@ -44,11 +44,17 @@ export class AccountDetailPageComponent implements OnInit {
         ).then((resolve) => {
             this.account = resolve[0];
         });
-        await userAccountTransfers(
+        await userAccountSendTransfers(
             username,
             this.route.snapshot.params.accountNumber
         ).then((response) => {
-            this.accountTransfers = response;
+            this.accountSendTransfers = response;
+        });
+        await userAccountReceiveTransfers(
+            username,
+            this.route.snapshot.params.accountNumber
+        ).then((response) => {
+            this.accountReceiveTransfers = response;
         });
     }
 

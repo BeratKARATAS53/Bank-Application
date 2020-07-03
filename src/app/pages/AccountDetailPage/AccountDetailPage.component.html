@@ -23,7 +23,7 @@
             <div class="col-2">
                 <h5>
                     Bakiye:
-                    <span>{{ account.amount }}</span>
+                    <span>{{ account.amount | myCurrency }}</span>
                 </h5>
             </div>
             <div class="col-2">
@@ -52,15 +52,30 @@
                     <th>Tarih</th>
                 </tr>
             </thead>
-            <tr *ngFor="let transfer of accountTransfers">
-                <td *ngIf="transfer.transferType === 'Havale'; else elseblock">
-                    {{ transfer.customerReceiveAccountName }}
+            <tr *ngFor="let transfer of accountSendTransfers">
+                <td *ngIf="transfer.transferType === 'Havale'">
+                    {{ transfer.cReceiveAccountName }}
                 </td>
-                <td #elseblock>{{ transfer.customerReceive }}</td>
-                <td>{{ transfer.customerSendAccountCurrency }}</td>
-                <td>{{ transfer.amount }}</td>
+                <td *ngIf="transfer.transferType === 'Virman'">
+                    {{ transfer.cReceiveAccountNumber }}
+                </td>
+                <td>{{ transfer.cSendAccountCurrency }}</td>
+                <td>{{ transfer.amount | myCurrency }}</td>
                 <td>{{ transfer.description }}</td>
-                <td>{{ transfer.customerSendAccountAmount }}</td>
+                <td>{{ transfer.cSendAccountAmount }}</td>
+                <td>{{ transfer.date }}</td>
+            </tr>
+            <tr *ngFor="let transfer of accountReceiveTransfers">
+                <td *ngIf="transfer.transferType === 'Havale'">
+                    {{ transfer.cReceiveAccountName }}
+                </td>
+                <td *ngIf="transfer.transferType === 'Virman'">
+                    {{ transfer.cReceiveAccountNumber }}
+                </td>
+                <td>{{ transfer.cSendAccountCurrency }}</td>
+                <td>{{ transfer.amount | absoluteValue | myCurrency }}</td>
+                <td>{{ transfer.description }}</td>
+                <td>{{ transfer.cSendAccountAmount }}</td>
                 <td>{{ transfer.date }}</td>
             </tr>
         </table>

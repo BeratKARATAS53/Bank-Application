@@ -11,30 +11,32 @@ export class TransferService {
     addTransfer(
         // Transfer Ekleme Fonksiyonu
         transferType: string,
-        customerName: string,
-        customerSend: number,
-        customerReceive: number,
+        cSendName: string,
+        cSendAccountName: string,
+        cSendAccountNumber: number,
+        cSendAccountAmount: number,
+        cSendAccountCurrency: string,
+        cReceiveName: string,
+        cReceiveAccountName: string,
+        cReceiveAccountNumber: number,
         amount: number,
         description: string,
-        date: string,
-        customerReceiveAccountName: string,
-        customerSendAccountName: string,
-        customerSendAccountAmount: number,
-        customerSendAccountCurrency: string
+        date: string
     ) {
         database.transfers
             .put({
                 transferType: transferType,
-                customerName: customerName,
-                customerSend: customerSend,
-                customerReceive: customerReceive,
+                cSendName: cSendName,
+                cSendAccountName: cSendAccountName,
+                cSendAccountNumber: cSendAccountNumber,
+                cSendAccountAmount: cSendAccountAmount,
+                cSendAccountCurrency: cSendAccountCurrency,
+                cReceiveName: cReceiveName,
+                cReceiveAccountName: cReceiveAccountName,
+                cReceiveAccountNumber: cReceiveAccountNumber,
                 amount: amount,
                 description: description,
                 date: date,
-                customerReceiveAccountName: customerReceiveAccountName,
-                customerSendAccountName: customerSendAccountName,
-                customerSendAccountAmount: customerSendAccountAmount,
-                customerSendAccountCurrency: customerSendAccountCurrency,
             })
             .then(() => {
                 alert('Transfer Başarıyla Eklendi.');
@@ -46,29 +48,51 @@ export class TransferService {
     }
 }
 
-export async function userTransfers(username: string) {
+export async function userSendTransfers(username: string) {
     // Kullanıcının Transferlerini Getirme Fonksiyonu
     return await database.transfers
-        .where('customerName')
+        .where('cSendName')
         .equalsIgnoreCase(username)
+        .reverse()
+        .toArray();
+}
+export async function userReceiveTransfers(username: string) {
+    // Kullanıcının Transferlerini Getirme Fonksiyonu
+    return await database.transfers
+        .where('cReceiveName')
+        .equalsIgnoreCase(username)
+        .and((transfer) => transfer.cSendName !== username)
         .reverse()
         .toArray();
 }
 export async function userTransfersLimitTen(username: string) {
     // Kullanıcının Transferlerini Getirme Fonksiyonu
     return await database.transfers
-        .where('customerName')
+        .where('cSendName')
         .equalsIgnoreCase(username)
-        .reverse().limit(10).toArray()
+        .reverse()
+        .limit(10)
+        .toArray();
 }
-export async function userAccountTransfers(
+export async function userAccountSendTransfers(
     username: string,
     accountNumber: number
 ) {
-    // Kullanıcının Tek Bir Hesabına Ait Transfer Bilgilerini Getirme Fonksiyonu
+    // Kullanıcının Tek Bir Hesabına Ait Gönderdiği Transfer Bilgilerini Getirme Fonksiyonu
     return await database.transfers
-        .where({ customerName: username })
-        .and((transfer) => transfer.customerSend == accountNumber)
+        .where({ cSendName: username })
+        .and((transfer) => transfer.cSendAccountNumber == accountNumber)
+        .reverse()
+        .toArray();
+}
+export async function userAccountReceiveTransfers(
+    username: string,
+    accountNumber: number
+) {
+    // Kullanıcının Tek Bir Hesabına Ait Aldığı Transfer Bilgilerini Getirme Fonksiyonu
+    return await database.transfers
+        .where({ cReceiveName: username })
+        .and((transfer) => transfer.cReceiveAccountNumber == accountNumber)
         .reverse()
         .toArray();
 }
