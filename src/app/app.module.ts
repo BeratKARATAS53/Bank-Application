@@ -1,3 +1,5 @@
+import { AccountCardComponent } from './components/AccountCard/AccountCard.component';
+import { FormatCurrencyPipe } from './pipes/FormatCurrency.pipe';
 import { SidebarComponent } from './components/Sidebar/Sidebar.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -10,7 +12,13 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    declarations: [AppComponent, routingComponent, SidebarComponent],
+    declarations: [
+        AppComponent,
+        SidebarComponent,
+        AccountCardComponent,
+        FormatCurrencyPipe,
+        routingComponent,
+    ],
     imports: [
         BrowserModule,
         AppRoutingModule,
