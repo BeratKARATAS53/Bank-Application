@@ -4,35 +4,39 @@
         <div class="row">
             <div class="col-10">
                 <h2>Hesaplarım ({{ numberOfAccounts }} Adet)</h2>
+
                 <div
                     class="row card-group"
                     *ngIf="numberOfAccounts; else elseBlock"
                 >
-                    <div
-                        class="col-4"
-                        style="width: auto; height: auto;"
-                        *ngFor="let account of accounts"
-                    >
-                        <div class="card account-card">
-                            <h5 class="card-title">
-                                {{ account.accountName }} (
-                                {{ account.currency }})
-                            </h5>
-                            <p class="card-text">
-                                Hesap Numarası: {{ account.accountNumber }}
-                            </p>
-                            <p class="card-text">
-                                Toplam Tutar: {{ account.amount }}
-                            </p>
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                (click)="gotoDetails(account.accountNumber)"
-                            >
-                                Ayrıntılar
-                            </button>
-                        </div>
-                    </div>
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Hesap Adı</th>
+                                <th>Hesap Numarası</th>
+                                <th>Para Birimi</th>
+                                <th>Toplam Tutar</th>
+                                <th>Oluşturulma Tarihi</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let account of accounts">
+                            <td>{{ account.accountName }}</td>
+                            <td>{{ account.accountNumber }}</td>
+                            <td>{{ account.currency }}</td>
+                            <td>{{ account.amount | myCurrency }}</td>
+                            <td>{{ account.date }}</td>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    (click)="gotoDetails(account.accountNumber)"
+                                >
+                                    Ayrıntılar
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <ng-template #elseBlock
                     ><h4>Hesabınız Bulunmamakta.</h4></ng-template
@@ -82,16 +86,19 @@
                         type="number"
                         formControlName="amount"
                         class="form-control"
+                        min="1"
                     />
                     <div
                         class="alert alert-danger"
                         *ngIf="
-                            accountName.errors &&
-                            (accountName.dirty || accountName.touched)
+                            amount.errors && (amount.dirty || amount.touched)
                         "
                     >
-                        <p *ngIf="accountName.errors.required">
+                        <p *ngIf="amount.errors.required">
                             Tutar Girmek Zorunlu!
+                        </p>
+                        <p *ngIf="amount.errors.min">
+                            Minimum 1 Birim Girmek Zorunlu!
                         </p>
                     </div>
                     <br />
@@ -103,8 +110,9 @@
                         <option
                             *ngFor="let account of accounts"
                             value="{{ account.accountNumber }}"
-                            >{{ account.accountNumber }} -
-                            {{ account.amount }}</option
+                            >Hesap No: {{ account.accountNumber }}, Bakiye:
+                            {{ account.amount }}, Para Birimi:
+                            {{ account.currency }}</option
                         >
                     </select>
                     <div
@@ -117,6 +125,9 @@
                         <p *ngIf="otherAmount.errors.required">
                             Paranın Çekileceği Hesap Seçilmek Zorunda!
                         </p>
+                    </div>
+                    <div class="alert alert-info">
+                        Para Birimleri Arasında Dönüşüm Yapıldığını Unutmayın!
                     </div>
                     <label for="currency">Para Birimi *</label>
                     <select

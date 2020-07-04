@@ -22,7 +22,12 @@ export class RegisterPageComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private session: SessionService
-    ) {}
+    ) {
+        if (session.getToken()) {
+            // Eğer giriş yapan kullanıcı yoksa Login sayfasına yönlendirir.
+            this.router.navigateByUrl('/main');
+        }
+    }
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
@@ -39,7 +44,7 @@ export class RegisterPageComponent implements OnInit {
     get password() {
         return this.registerForm.get('password');
     }
-    
+
     onSubmit() {
         this.submitted = true;
         this.customer = this.registerForm.value;

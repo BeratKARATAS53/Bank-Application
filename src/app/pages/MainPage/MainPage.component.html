@@ -1,0 +1,58 @@
+<app-Sidebar></app-Sidebar>
+<div class="main">
+    <div class="container-sm">
+        <div class="row">
+            <div class="col-10">
+                <h2>Hesaplar</h2>
+                <hr />
+                <app-AccountCard></app-AccountCard>
+                <hr />
+                <h2>Son Hesap Hareketleri</h2>
+                <hr />
+                <div
+                    *ngIf="
+                        sendTransfers.length !== 0 ||
+                            receiveTransfers.length !== 0;
+                        else noTransfer
+                    "
+                >
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Gönderen Hesap Numarası</th>
+                                <th>Alan Hesap Numarası</th>
+                                <th>Tutar</th>
+                                <th>Açıklama</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let transfer of sendTransfers">
+                            <td>{{ transfer.cSendAccountNumber }}</td>
+                            <td>{{ transfer.cReceiveAccountNumber }}</td>
+                            <td>{{ transfer.amount | myCurrency }}</td>
+                            <td>{{ transfer.description }}</td>
+                        </tr>
+                        <tr *ngFor="let transfer of receiveTransfers">
+                            <td>{{ transfer.cSendAccountNumber }}</td>
+                            <td>{{ transfer.cReceiveAccountNumber }}</td>
+                            <td>
+                                {{
+                                    transfer.amount | absoluteValue | myCurrency
+                                }}
+                            </td>
+                            <td>{{ transfer.description }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <ng-template #noTransfer
+                    ><h4>Hesap Hareketiniz Bulunmamakta.</h4></ng-template
+                >
+            </div>
+            <div class="col-2">
+                <h2>Döviz Kuru</h2>
+                <h5>Dolar: 6 TL</h5>
+                <h5>Euro: 7 TL</h5>
+                <h5>Altın: 390 TL</h5>
+            </div>
+        </div>
+    </div>
+</div>

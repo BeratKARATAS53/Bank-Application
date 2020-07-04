@@ -1,8 +1,5 @@
+import { CurrencyConverterService } from './../../services/CurrencyConverter/CurrencyConverter.service';
 import { Account } from './../../models/Account';
-import {
-    AccountService,
-    getAccount,
-} from './../../services/AccountService/AccountService.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,8 +8,11 @@ import { SessionService } from 'src/app/services/SessionService/SessionService.s
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { formatDate } from '@angular/common';
 import {
+    getAccount,
     userAccounts,
     numberOfAccounts,
+    getAccountKey,
+    AccountService,
 } from '../../services/AccountService/AccountService.service';
 
 @Component({
@@ -41,6 +41,7 @@ export class AccountsPageComponent implements OnInit {
         private router: Router,
         private session: SessionService,
         private accountService: AccountService,
+        private currencyService: CurrencyConverterService,
         private modalService: NgbModal
     ) {
         if (!session.getToken()) {
@@ -64,7 +65,7 @@ export class AccountsPageComponent implements OnInit {
     ngOnInit() {
         this.accountForm = this.formBuilder.group({
             accountName: ['', Validators.required],
-            amount: ['10000', Validators.required],
+            amount: ['10000', [Validators.required, Validators.min(1)]],
             currency: ['TL', Validators.required],
             otherAmount: [[]],
         });
@@ -73,17 +74,16 @@ export class AccountsPageComponent implements OnInit {
     get accountName() {
         return this.accountForm.get('accountName');
     }
-
     get amount() {
         return this.accountForm.get('amount');
     }
     get currency() {
         return this.accountForm.get('currency');
     }
-
     get otherAmount() {
         return this.accountForm.get('otherAmount');
     }
+
     open(content: any) {
         this.modalService
             .open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -106,11 +106,30 @@ export class AccountsPageComponent implements OnInit {
                 }
             );
 
-            if (this.newAccount.amount > this.otherAccount.amount) {
+            let convertMoney: number = this.currencyService.convertForAddAccount(
+                this.otherAccount.currency,
+                this.newAccount.currency,
+                this.newAccount.amount
+            );
+
+            if (convertMoney > this.otherAccount.amount) {
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
+            } else {
+                let uniqueKey: number;
+                await getAccountKey(
+                    this.otherAccount.accountNumber
+                ).then((response) => {
+                    uniqueKey = response[0];
+                });
+
+                this.accountService.updateAccount(
+                    uniqueKey,
+                    this.otherAccount.amount - convertMoney
+                );
             }
         }
+        console.log(this.newAccount);
 
         let accountNumber = Math.floor(
             Math.random() * (999999 - 100000 + 1) + 100000
@@ -125,6 +144,14 @@ export class AccountsPageComponent implements OnInit {
             this.rate,
             this.now
         );
+    }
+
+    async deleteAccount(accountNumber: number) {
+        let uniqueKey: number;
+        await getAccountKey(accountNumber).then((response) => {
+            uniqueKey = response[0];
+        });
+        this.accountService.deleteAccount(uniqueKey);
     }
 
     gotoDetails(accountNumber: any) {

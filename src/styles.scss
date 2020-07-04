@@ -1,4 +1,3 @@
-
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
@@ -73,7 +72,8 @@ p {
     padding: 0px 10px;
 }
 
-.main h2, h5 {
+.main h2,
+h5 {
     color: #0094bf;
 }
 .main h3 {
@@ -95,7 +95,19 @@ p {
     margin-top: 50px;
 }
 
+.main .col-10 {
+    margin-top: -20px;
+}
+
+.main .col-4 {
+    width: auto;
+    height: auto;
+    padding: 10px 10px;
+}
+
 .account-cart {
     margin: 20px;
     padding: 20px;
+    min-width: 150px;
+    min-height: 150px;
 }

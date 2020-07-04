@@ -14,16 +14,13 @@ export class BankApplicationDB extends Dexie {
 
         // Define tables and indexes
         db.version(1).stores({
-            customers: '++id,&username,password',
+            customers: '++id,[&username+password]',
             accounts:
-                '++id,customerName,accountName,accountNumber,amount,currency,rate,date',
+                '++id,customerName,accountName,&accountNumber,amount,currency,rate,date',
             transfers:
-                '++id,customerName,customerSend,customerReceive,amount,description',
+                '++id,transferType,cSendName,cSendAccountName,cSendAccountNumber,cSendAccountAmount,cSendAccountCurrency,cReceiveName,cReceiveAccountName,cReceiveAccountNumber,amount,description,date',
         });
 
-        // Let's physically map Contact class to contacts table.
-        // This will make it possible to call loadEmailsAndPhones()
-        // directly on retrieved database objects.
         db.customers.mapToClass(Customer);
         db.accounts.mapToClass(Account);
         db.transfers.mapToClass(Transfer);

@@ -1,9 +1,10 @@
-import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 import {
     AccountService,
-    numberOfAccounts,
-    getAccount,
-} from 'src/app/services/AccountService/AccountService.service';
+} from './../../services/AccountService/AccountService.service';
+import { Transfer } from './../../models/Transfer';
+import { userAccountSendTransfers, userAccountReceiveTransfers } from './../../services/TransferService/TransferService.service';
+import { SessionService } from 'src/app/services/SessionService/SessionService.service';
+import { getAccount } from 'src/app/services/AccountService/AccountService.service';
 import { Account } from './../../models/Account';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -17,7 +18,9 @@ export class AccountDetailPageComponent implements OnInit {
     account: Account;
     accountNumber: number;
     username: string;
-    numberOfAccounts: number;
+
+    accountSendTransfers: Transfer[];
+    accountReceiveTransfers: Transfer[];
 
     constructor(
         private route: ActivatedRoute,
@@ -30,11 +33,41 @@ export class AccountDetailPageComponent implements OnInit {
             this.router.navigateByUrl('/login');
         } else {
             // Eğer giriş yapan kullanıcı varsa token'dan kullanıcı adı bilgisi alınır.
-            this.username = this.session.getToken();
+            this.getFirst(session.getToken());
         }
+    }
+    async getFirst(username: string) {
+        this.username = this.session.getToken();
+        await getAccount(
+            username,
+            this.route.snapshot.params.accountNumber
+        ).then((resolve) => {
+            this.account = resolve[0];
+        });
+        await userAccountSendTransfers(
+            username,
+            this.route.snapshot.params.accountNumber
+        ).then((response) => {
+            this.accountSendTransfers = response;
+        });
+        await userAccountReceiveTransfers(
+            username,
+            this.route.snapshot.params.accountNumber
+        ).then((response) => {
+            this.accountReceiveTransfers = response;
+        });
     }
 
     ngOnInit() {}
+
+    // async getAccountNameWithAccountNumber(accountNumber: number) {
+    //     let accountName: string;
+
+    //     await getAccountName(accountNumber).then((response) => {
+    //         accountName = response[0].accountName;
+    //     });
+    //     return accountName;
+    // }
 
     logOut() {
         this.session.logOut();
