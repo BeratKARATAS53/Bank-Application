@@ -28,7 +28,7 @@
                         <tr *ngFor="let transfer of sendTransfers">
                             <td>{{ transfer.cSendAccountNumber }}</td>
                             <td>{{ transfer.cReceiveAccountNumber }}</td>
-                            <td>{{ transfer.amount | myCurrency }}</td>
+                            <td>{{ transfer.amount | myCurrency }} {{ transfer.cSendAccountCurrency }}</td>
                             <td>{{ transfer.description }}</td>
                         </tr>
                         <tr *ngFor="let transfer of receiveTransfers">
@@ -37,7 +37,7 @@
                             <td>
                                 {{
                                     transfer.amount | absoluteValue | myCurrency
-                                }}
+                                }} {{ transfer.cSendAccountCurrency }}
                             </td>
                             <td>{{ transfer.description }}</td>
                         </tr>
