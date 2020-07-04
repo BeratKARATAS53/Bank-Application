@@ -12,15 +12,16 @@ export class BankApplicationDB extends Dexie {
         super('BankApplicationDB');
         const db = this;
 
-        // Define tables and indexes
+        // Tabloları Tanımlama
         db.version(1).stores({
             customers: '++id,[&username+password]',
             accounts:
                 '++id,customerName,accountName,&accountNumber,amount,currency,rate,date',
             transfers:
-                '++id,transferType,cSendName,cSendAccountName,cSendAccountNumber,cSendAccountAmount,cSendAccountCurrency,cReceiveName,cReceiveAccountName,cReceiveAccountNumber,amount,description,date',
+                '++id,transferType,cSendName,cSendAccountName,cSendAccountNumber,cSendAccountAmount,cSendAccountCurrency,cReceiveName,cReceiveAccountName,cReceiveAccountNumber,cReceiveAccountAmount,amount,description,date',
         });
 
+        // Tabloları halihazırdaki model'lere eşitleme
         db.customers.mapToClass(Customer);
         db.accounts.mapToClass(Account);
         db.transfers.mapToClass(Transfer);

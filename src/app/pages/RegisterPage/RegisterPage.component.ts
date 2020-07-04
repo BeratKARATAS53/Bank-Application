@@ -10,12 +10,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     styleUrls: ['./RegisterPage.component.css'],
 })
 export class RegisterPageComponent implements OnInit {
-    registerForm: FormGroup;
-    customer = new Customer();
-
-    submitted: boolean = false;
-    loggedIn: boolean = false;
-    returnUrl: string;
+    registerForm: FormGroup; // Kullanıcı Kayıt Formu
+    customer = new Customer(); // Form İçin Kullanıcı Objesi
 
     constructor(
         private formBuilder: FormBuilder,
@@ -31,26 +27,27 @@ export class RegisterPageComponent implements OnInit {
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
+            // Form İle İlgili Validasyonları Belirleme
             username: ['', Validators.required],
             password: ['', [Validators.required, Validators.minLength(6)]],
         });
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
+    /** Validasyon için form değerlerine ulaşmayı sağlayan get metodları */
     get username() {
         return this.registerForm.get('username');
     }
-
     get password() {
         return this.registerForm.get('password');
     }
 
     onSubmit() {
-        this.submitted = true;
+        // Kullanıcı Kaydı Fonksiyonu
         this.customer = this.registerForm.value;
 
-        // stop here if form is invalid
+        // Eğer form'da herhangi bir validasyon hatası çıkarsa işlem yapılmaz!
         if (this.registerForm.invalid) {
+            alert('Zorunlu Alanları Doldurun!');
             return;
         }
 

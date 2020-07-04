@@ -21,19 +21,19 @@ import {
     styleUrls: ['./AccountsPage.component.css'],
 })
 export class AccountsPageComponent implements OnInit {
-    accountForm: FormGroup;
+    accountForm: FormGroup; // Hesap Ekleme Formu
 
-    accounts: Account[];
-    numberOfAccounts: number;
-    newAccount = new Account();
-    firstAccount: boolean = false;
-    otherAccount: Account;
+    accounts: Account[]; // Kullanıcın Hesapları
+    numberOfAccounts: number; // Kullanıcının Hesap Adeti
+    newAccount = new Account(); // Açılacak Yeni Hesap
+    firstAccount: boolean = false; // Açılacak Hesabın İlk Hesap Olup Olmadığını Tutan Değişken
+    otherAccount: Account; // Açılan Hesaba Para Aktaracak Diğer Hesap
 
-    username: string;
-    rate: number = 15;
+    username: string; // Giriş Yapan Kullanıcı
+    rate: number = 15; // Sabit Faiz Oranı
 
     closeResult: string;
-    now = formatDate(new Date(), 'dd/MM/yyyy', 'en');
+    now = formatDate(new Date(), 'dd/MM/yyyy', 'en'); // Kayıt Tarihi İçin Tutulan Değişken
 
     constructor(
         private formBuilder: FormBuilder,
@@ -53,17 +53,20 @@ export class AccountsPageComponent implements OnInit {
     }
 
     async getFirst(username: string) {
-        this.username = this.session.getToken();
+        this.username = this.session.getToken(); // Token'dan kullanıcı ismi alınıp "username" değişkenine kaydedilir.
         await userAccounts(username).then(
+            // Kullanıcının hesapları "accounts" değişkenine kaydedilir.
             (resolve) => (this.accounts = resolve)
         );
         await numberOfAccounts(username).then(
+            // Kullanıcının hesap adeti "numberOfAccounts" değişkenine kaydedilir.
             (resolve) => (this.numberOfAccounts = resolve)
         );
     }
 
     ngOnInit() {
         this.accountForm = this.formBuilder.group({
+            // Form İle İlgili Validasyonları Belirleme
             accountName: ['', Validators.required],
             amount: ['10000', [Validators.required, Validators.min(1)]],
             currency: ['TL', Validators.required],
@@ -71,6 +74,7 @@ export class AccountsPageComponent implements OnInit {
         });
     }
 
+    /** Validasyon için form değerlerine ulaşmayı sağlayan get metodları */
     get accountName() {
         return this.accountForm.get('accountName');
     }
@@ -85,6 +89,7 @@ export class AccountsPageComponent implements OnInit {
     }
 
     open(content: any) {
+        // Hesap Ekleme Modal'ını Açma Fonksiyonu
         this.modalService
             .open(content, { ariaLabelledBy: 'modal-basic-title' })
             .result.then((result) => {
@@ -93,49 +98,58 @@ export class AccountsPageComponent implements OnInit {
     }
 
     async onSubmit() {
+        // Hesap Ekleme Fonksiyonu
         this.newAccount = this.accountForm.value;
 
-        // stop here if form is invalid
+        // Form'da validasyon hatası varsa geri döner.
         if (this.accountForm.invalid) {
+            alert('Zorunlu Alanları Doldurun!');
             return;
         }
         if (this.numberOfAccounts !== 0) {
+            // Kullanıcının ilk hesabı açıp açmadığını kontrol etme
             await getAccount(this.username, this.otherAmount.value).then(
+                // Hesaba yüklenecek paranın çekileceği hesap bilgisi
                 (response) => {
                     this.otherAccount = response[0];
                 }
             );
 
             let convertMoney: number = this.currencyService.convertForAddAccount(
+                // Döviz Kuru'na göre para dönüştürme işlemleri
                 this.otherAccount.currency,
                 this.newAccount.currency,
                 this.newAccount.amount
             );
 
             if (convertMoney > this.otherAccount.amount) {
+                // Dönüştürülen para çekilecek hesaptaki paradan fazla ise
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
             } else {
+                // Yeterli bakiye varsa
                 let uniqueKey: number;
-                await getAccountKey(
-                    this.otherAccount.accountNumber
-                ).then((response) => {
-                    uniqueKey = response[0];
-                });
+                await getAccountKey(this.otherAccount.accountNumber).then(
+                    (response) => {
+                        uniqueKey = response[0];
+                    }
+                );
 
                 this.accountService.updateAccount(
+                    // Diğer hesaptan yatırılacak para miktarı düşülür.
                     uniqueKey,
                     this.otherAccount.amount - convertMoney
                 );
             }
         }
-        console.log(this.newAccount);
 
         let accountNumber = Math.floor(
+            // Rastgele bir hesap numarası
             Math.random() * (999999 - 100000 + 1) + 100000
         );
 
         this.accountService.addAccount(
+            // Hesap veritabanına eklenir.
             this.username,
             this.newAccount.accountName,
             accountNumber,
@@ -146,19 +160,8 @@ export class AccountsPageComponent implements OnInit {
         );
     }
 
-    async deleteAccount(accountNumber: number) {
-        let uniqueKey: number;
-        await getAccountKey(accountNumber).then((response) => {
-            uniqueKey = response[0];
-        });
-        this.accountService.deleteAccount(uniqueKey);
-    }
-
     gotoDetails(accountNumber: any) {
+        // Detay Sayfasına Yönlendirme Fonksiyonu
         this.router.navigate(['/account/', accountNumber]);
-    }
-
-    logOut() {
-        this.session.logOut();
     }
 }
