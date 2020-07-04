@@ -16,19 +16,21 @@ import { SidebarComponent } from './components/Sidebar/Sidebar.component';
 const routes: Routes = [
     {
         path: '',
-        pathMatch: 'prefix',
         component: SidebarComponent,
         children: [
             { path: '', pathMatch: 'full', redirectTo: 'main' },
             { path: 'main', component: MainPageComponent },
             { path: 'accounts', component: AccountsPageComponent },
             { path: 'transfers', component: TransfersPageComponent },
+            {
+                path: 'account/:accountNumber',
+                component: AccountDetailPageComponent,
+            },
+            { path: 'error', component: ErrorPageComponent },
         ],
     },
-    { path: 'account/:accountNumber', component: AccountDetailPageComponent },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
-    { path: 'error', component: ErrorPageComponent },
 ];
 
 @NgModule({

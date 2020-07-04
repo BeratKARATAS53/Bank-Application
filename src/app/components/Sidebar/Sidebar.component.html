@@ -13,11 +13,14 @@
         {{ "sidebar.transfers" | translate }}
     </a>
     <hr />
-    <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
-        {{ "sidebar.logout" | translate }}
-    </button>
+    <div class="btn-group" role="group">
+        <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
+            {{ "sidebar.logout" | translate }}
+        </button>
+    </div>
+
     <hr />
-    <div class="btn-group" role="group" style="width: 100%;">
+    <div class="btn-group" role="group">
         <button
             type="button"
             class="btn btn-secondary"

@@ -58,7 +58,6 @@ a:hover {
 }
 
 .sidebar button {
-    width: 80%;
     color: wheat;
     margin: 20px;
 }
@@ -113,9 +112,10 @@ h5 {
     min-height: 150px;
 }
 
-#button-group {
-    margin: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.btn-group {
+    width: 100%;
+}
+
+.main button {
+    width: 100%;
 }
