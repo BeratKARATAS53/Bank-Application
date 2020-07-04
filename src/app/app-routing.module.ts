@@ -2,6 +2,7 @@ import { MainPageComponent } from './pages/MainPage/MainPage.component';
 // @angular
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 // components
 import { LoginPageComponent } from './pages/LoginPage/LoginPage.component';
@@ -21,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes), TranslateModule],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

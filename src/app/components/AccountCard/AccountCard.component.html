@@ -6,11 +6,15 @@
                     {{ account.accountName }} ({{ account.currency }})
                 </h5>
                 <p class="card-text">
-                    Hesap Numarası: {{ account.accountNumber }}
+                    {{ "account.accountName" | translate }}
+                    {{ account.accountNumber }}
                 </p>
-                <p class="card-text">Faiz Oranı: %{{ account.rate }}</p>
                 <p class="card-text">
-                    Toplam Tutar: {{ account.amount | myCurrency }}
+                    {{ "account.rate" | translate }}: %{{ account.rate }}
+                </p>
+                <p class="card-text">
+                    {{ "account.amount" | translate }}:
+                    {{ account.amount | myCurrency }}
                 </p>
             </div>
 
@@ -20,16 +24,19 @@
                 (click)="deleteAccount(account.accountNumber)"
                 *ngIf="account.amount == 0"
             >
-                Hesabı Sil
+                {{ "account.deleteAccount" | translate }}
             </button>
             <button
                 type="button"
                 class="btn btn-primary"
                 (click)="gotoDetails(account.accountNumber)"
             >
-                Ayrıntılar
+                {{ "account.details" | translate }}
             </button>
         </div>
     </div>
 </div>
-<ng-template #elseBlock><h4>Hesabınız Bulunmamakta.</h4></ng-template>
+
+<ng-template #elseBlock>
+    <h4>{{ "account.noAccounts" | translate }}</h4>
+</ng-template>

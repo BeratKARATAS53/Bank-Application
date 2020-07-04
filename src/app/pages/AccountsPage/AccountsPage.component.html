@@ -3,7 +3,9 @@
     <div class="container-sm">
         <div class="row">
             <div class="col-10">
-                <h2>Hesaplarım ({{ numberOfAccounts }} Adet)</h2>
+                <h2>
+                    {{ "sidebar.accounts" | translate }}
+                </h2>
 
                 <div
                     class="row card-group"
@@ -12,12 +14,16 @@
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Hesap Adı</th>
-                                <th>Hesap Numarası</th>
-                                <th>Para Birimi</th>
-                                <th>Toplam Tutar</th>
-                                <th>Oluşturulma Tarihi</th>
-                                <th>İşlem</th>
+                                <th>{{ "account.accountName" | translate }}</th>
+                                <th>
+                                    {{ "account.accountNumber" | translate }}
+                                </th>
+                                <th>
+                                    {{ "account.currency.title" | translate }}
+                                </th>
+                                <th>{{ "account.amount" | translate }}</th>
+                                <th>{{ "account.date" | translate }}</th>
+                                <th>{{ "account.action" | translate }}</th>
                             </tr>
                         </thead>
                         <tr *ngFor="let account of accounts">
@@ -32,22 +38,24 @@
                                     class="btn btn-primary"
                                     (click)="gotoDetails(account.accountNumber)"
                                 >
-                                    Ayrıntılar
+                                    {{ "account.detail" | translate }}
                                 </button>
                             </td>
                         </tr>
                     </table>
                 </div>
-                <ng-template #elseBlock
-                    ><h4>Hesabınız Bulunmamakta.</h4></ng-template
-                >
+                <ng-template #elseBlock>
+                    <h4>
+                        {{ "account.noAccounts" | translate }}
+                    </h4>
+                </ng-template>
             </div>
             <div class="col-2">
                 <button
                     class="btn btn-lg btn-primary"
                     (click)="open(addAccount)"
                 >
-                    Hesap Ekle
+                    {{ "account.modal.addAccount" | translate }}
                 </button>
             </div>
         </div>
@@ -55,11 +63,15 @@
 
     <ng-template #addAccount let-modal>
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Hesap Ekleme</h4>
+            <h4 class="modal-title" id="modal-basic-title">
+                {{ "account.modal.addAccount" | translate }}
+            </h4>
         </div>
         <div class="modal-body">
             <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
-                <label for="accountName">Hesap Adı *</label>
+                <label for="accountName"
+                    >{{ "account.accountName" | translate }} *</label
+                >
                 <input
                     type="text"
                     formControlName="accountName"
@@ -74,14 +86,19 @@
                     "
                 >
                     <p *ngIf="accountName.errors.required">
-                        Hesap Adı Girmek Zorunlu!
+                        {{
+                            "account.modal.errors.accountNameRequired"
+                                | translate
+                        }}
                     </p>
                 </div>
                 <div
                     class="form-group"
                     *ngIf="numberOfAccounts != 0; else elseblock"
                 >
-                    <label for="amount">Tutar *</label>
+                    <label for="amount">
+                        {{ "account.amount" | translate }} *
+                    </label>
                     <input
                         type="number"
                         formControlName="amount"
@@ -95,14 +112,19 @@
                         "
                     >
                         <p *ngIf="amount.errors.required">
-                            Tutar Girmek Zorunlu!
+                            {{
+                                "account.modal.errors.amountRequired"
+                                    | translate
+                            }}
                         </p>
                         <p *ngIf="amount.errors.min">
-                            Minimum 1 Birim Girmek Zorunlu!
+                            {{ "account.modal.errors.amountMin" | translate }}
                         </p>
                     </div>
                     <br />
-                    <label for="otherAmount">Paranın Çekileceği Hesap *</label>
+                    <label for="otherAmount"
+                        >{{ "account.withdrawAccount" | translate }} *
+                    </label>
                     <select
                         class="custom-select custom-select-lg mb-3"
                         formControlName="otherAmount"
@@ -110,10 +132,14 @@
                         <option
                             *ngFor="let account of accounts"
                             value="{{ account.accountNumber }}"
-                            >Hesap No: {{ account.accountNumber }}, Bakiye:
-                            {{ account.amount }}, Para Birimi:
-                            {{ account.currency }}</option
                         >
+                            {{ "account.accountNumber" | translate }}
+                            {{ account.accountNumber }},
+                            {{ "account.accountNumber" | translate }}
+                            {{ account.amount }},
+                            {{ "account.currency.title" | translate }}
+                            {{ account.currency }}
+                        </option>
                     </select>
                     <div
                         class="alert alert-danger"
@@ -123,21 +149,37 @@
                         "
                     >
                         <p *ngIf="otherAmount.errors.required">
-                            Paranın Çekileceği Hesap Seçilmek Zorunda!
+                            {{
+                                "account.modal.errors.withdrawAccountRequired"
+                                    | translate
+                            }}
                         </p>
                     </div>
                     <div class="alert alert-info">
-                        Para Birimleri Arasında Dönüşüm Yapıldığını Unutmayın!
+                        {{
+                            "account.modal.errors.currencyConvertion"
+                                | translate
+                        }}
                     </div>
-                    <label for="currency">Para Birimi *</label>
+                    <label for="currency">
+                        {{ "account.currency.title" | translate }} *
+                    </label>
                     <select
                         class="custom-select custom-select-lg mb-3"
                         formControlName="currency"
                     >
-                        <option value="TL">Türk Lirası (TL)</option>
-                        <option value="$">Dolar ($)</option>
-                        <option value="€">Euro (€)</option>
-                        <option value="Altın">Altın</option>
+                        <option value="TL">{{
+                            "account.currency.turkishLira" | translate
+                        }}</option>
+                        <option value="$">{{
+                            "account.currency.dolar" | translate
+                        }}</option>
+                        <option value="€">{{
+                            "account.currency.euro" | translate
+                        }}</option>
+                        <option value="Altın">{{
+                            "account.currency.gold" | translate
+                        }}</option>
                     </select>
                     <div
                         class="alert alert-danger"
@@ -147,23 +189,30 @@
                         "
                     >
                         <p *ngIf="currency.errors.required">
-                            Para Birimi Seçilmek Zorunda!
+                            {{
+                                "account.modal.errors.currencyRequired"
+                                    | translate
+                            }}
                         </p>
                     </div>
                 </div>
                 <ng-template #elseblock>
-                    <label for="amount">Tutar</label>
+                    <label for="amount">
+                        {{ "account.amount" | translate }}
+                    </label>
                     <div class="alert alert-info" role="alert">
-                        İlk Hesabınızı 10.000 TL İle Oluşturmanız Zorunludur!
+                        {{ "account.modal.errors.firstAccount" | translate }}
                     </div>
-                    <label for="amount">Para Birimi</label>
+                    <label for="amount">
+                        {{ "account.currency.title" | translate }}
+                    </label>
                     <div class="alert alert-info" role="alert">
                         TL
                     </div>
                 </ng-template>
                 <div class="form-group">
                     <button class="btn btn-primary btn-lg btn-block">
-                        Hesap Ekle
+                        {{ "account.modal.addAccount" | translate }}
                     </button>
                 </div>
             </form>

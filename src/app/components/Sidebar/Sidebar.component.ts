@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +7,7 @@ import {
     numberOfAccounts,
     getAccount,
 } from 'src/app/services/AccountService/AccountService.service';
-import { Account } from './../../models/Account';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -15,7 +16,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./Sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
-    username: string;  // Giriş Yapan Kullanıcı
+    username: string; // Giriş Yapan Kullanıcı
     numberOfAccounts: number; // Kullanıcının Hesap Adeti
 
     closeResult: string;
@@ -25,7 +26,8 @@ export class SidebarComponent implements OnInit {
         private router: Router,
         private session: SessionService,
         private accountService: AccountService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private translate: TranslateService
     ) {
         if (!session.getToken()) {
             // Eğer giriş yapan kullanıcı yoksa Login sayfasına yönlendirilir.
@@ -57,6 +59,9 @@ export class SidebarComponent implements OnInit {
             });
     }
 
+    changeLanguage(language: string) {
+        this.translate.use(language);
+    }
     logOut() {
         // Oturumu Kapatma Fonksiyonu
         this.session.logOut();

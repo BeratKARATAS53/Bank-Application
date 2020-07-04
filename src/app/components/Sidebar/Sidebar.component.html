@@ -1,27 +1,48 @@
 <div class="sidenav">
     <h3>{{ username }}</h3>
     <hr />
-    <a href="/main">Ana Sayfa</a>
+    <a href="/main">{{ "sidebar.main" | translate }}</a>
     <hr />
-    <a href="/accounts">Hesaplarım ({{ numberOfAccounts }})</a>
+    <a href="/accounts">
+        {{ "sidebar.accounts" | translate }} ({{ numberOfAccounts }})
+    </a>
     <hr />
-    <a href="/transfers">Transferlerim</a>
-    <hr />
-    <a href="#last">Son Hareketler</a>
+    <a href="/transfers">{{ "sidebar.transfers" | translate }}</a>
     <hr />
     <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
-        Çıkış Yap
+        {{ "sidebar.logout" | translate }}
     </button>
+    <hr />
+    <div class="btn-group" role="group" style="width: 100%;">
+        <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="changeLanguage('tr')"
+        >
+            TÜRKÇE
+        </button>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="changeLanguage('en')"
+        >
+            ENGLISH
+        </button>
+    </div>
 </div>
 
 <ng-template #logOutModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Emin Misiniz?</h4>
+        <h4 class="modal-title" id="modal-basic-title">
+            {{ "sidebar.modal.title" | translate }}
+        </h4>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success btn-lg" (click)="logOut()">Evet</button>
+        <button class="btn btn-success btn-lg" (click)="logOut()">
+            {{ "sidebar.modal.yes" | translate }}
+        </button>
         <button class="btn btn-danger btn-lg" (click)="modal.close()">
-            Hayır
+            {{ "sidebar.modal.no" | translate }}
         </button>
     </div>
 </ng-template>

@@ -1,8 +1,8 @@
 <div class="container-sm">
     <div class="login-container">
-        <h2>Giriş Yap</h2>
+        <h2>{{ "login.login" | translate }}</h2>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <label for="username">Kullanıcı Adı</label>
+            <label for="username">{{ "login.username" | translate }}</label>
             <input
                 type="text"
                 formControlName="username"
@@ -14,17 +14,16 @@
                 *ngIf="username.errors && (username.dirty || username.touched)"
             >
                 <p *ngIf="username.errors.required">
-                    Kullanıcı Adı Girmek Zorunlu!
+                    {{ "login.errors.usernameRequired" | translate }}
                 </p>
             </div>
             <div class="form-group">
-                <label for="password">Şifre</label>
+                <label for="password">{{ "login.password" | translate }}</label>
                 <input
                     type="password"
                     formControlName="password"
                     class="form-control"
                     required
-                    minlength="6"
                 />
                 <div
                     class="alert alert-danger"
@@ -33,20 +32,17 @@
                     "
                 >
                     <p *ngIf="password.errors.required">
-                        Şifre Girmek Zorunlu!
-                    </p>
-                    <p *ngIf="password.errors.minlength">
-                        Şifre Minimum 6 Karakterli Olmalı!
+                        {{ "login.errors.passwordRequired" | translate }}
                     </p>
                 </div>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary btn-lg btn-block">
-                    Giriş Yap
+                    {{ "login.login" | translate }}
                 </button>
-                <a routerLink="/register" class="btn btn-link btn-lg btn-block"
-                    >Kayıt Ol</a
-                >
+                <a routerLink="/register" class="btn btn-link btn-lg btn-block">
+                    {{ "login.register" | translate }}
+                </a>
             </div>
         </form>
     </div>
