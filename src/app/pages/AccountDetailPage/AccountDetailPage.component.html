@@ -45,10 +45,9 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Alıcı Hesabı</th>
-                    <th>Para Birimi</th>
                     <th>Tutar</th>
                     <th>Açıklama</th>
-                    <th>Kalan Bakiye</th>
+                    <th>Bakiye</th>
                     <th>Tarih</th>
                 </tr>
             </thead>
@@ -59,10 +58,9 @@
                 <td *ngIf="transfer.transferType === 'Virman'">
                     {{ transfer.cReceiveAccountNumber }}
                 </td>
-                <td>{{ transfer.cSendAccountCurrency }}</td>
-                <td>{{ transfer.amount | myCurrency }}</td>
+                <td>{{ transfer.amount | myCurrency }} {{ transfer.cSendAccountCurrency }}</td>
                 <td>{{ transfer.description }}</td>
-                <td>{{ transfer.cSendAccountAmount }}</td>
+                <td>{{ transfer.cSendAccountAmount | myCurrency }}</td>
                 <td>{{ transfer.date }}</td>
             </tr>
             <tr *ngFor="let transfer of accountReceiveTransfers">
@@ -72,10 +70,9 @@
                 <td *ngIf="transfer.transferType === 'Virman'">
                     {{ transfer.cReceiveAccountNumber }}
                 </td>
-                <td>{{ transfer.cSendAccountCurrency }}</td>
-                <td>{{ transfer.amount | absoluteValue | myCurrency }}</td>
+                <td>{{ transfer.amount | absoluteValue | myCurrency }} {{ transfer.cSendAccountCurrency }}</td>
                 <td>{{ transfer.description }}</td>
-                <td>{{ transfer.cSendAccountAmount }}</td>
+                <td>{{ transfer.cReceiveAccountAmount | myCurrency }}</td>
                 <td>{{ transfer.date }}</td>
             </tr>
         </table>

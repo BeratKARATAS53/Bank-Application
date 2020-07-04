@@ -19,7 +19,6 @@ import { SessionService } from 'src/app/services/SessionService/SessionService.s
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
-import { stringify } from 'querystring';
 
 @Component({
     selector: 'app-TransfersPage',
@@ -27,20 +26,20 @@ import { stringify } from 'querystring';
     styleUrls: ['./TransfersPage.component.css'],
 })
 export class TransfersPageComponent implements OnInit {
-    transferForm: FormGroup;
+    transferForm: FormGroup; // Transfer Ekleme Formu
 
-    sendTransfers: Transfer[];
-    receiveTransfers: Transfer[];
-    newTransfer = new Transfer();
+    sendTransfers: Transfer[]; // Gönderilen Transferler
+    receiveTransfers: Transfer[]; // Alınan Transferler
+    newTransfer = new Transfer(); // Form İçin Transfer Objesi Tanımlama
 
-    accounts: Account[];
-    userAnotherAccounts: Account[];
+    accounts: Account[]; // Transfer Eklemek İçin Gerekli Gönderen Kullanıcı Hesap Bilgileri
+    userAnotherAccounts: Account[]; // Virman Eklemek İçin Gerekli Alıcı Kullanıcı Hesap Bilgileri
 
-    username: string;
-    rate: number = 15;
+    username: string; // Giriş Yapan Kullanıcı
+    rate: number = 15; // Faiz Oranı
 
     closeResult: string;
-    now = formatDate(new Date(), 'dd/MM/yyyy', 'en');
+    now = formatDate(new Date(), 'dd/MM/yyyy', 'en'); // Kayıt Tarihi İçin Tutulan Değişken
 
     constructor(
         private formBuilder: FormBuilder,
@@ -61,20 +60,24 @@ export class TransfersPageComponent implements OnInit {
     }
 
     async getFirst(username: string) {
-        this.username = this.session.getToken();
+        this.username = this.session.getToken(); // Token'dan kullanıcı ismi alınıp "username" değişkenine kaydedilir.
         await userAccounts(username).then(
+            // Kullanıcının hesapları "accounts" değişkenine kaydedilir.
             (resolve) => (this.accounts = resolve)
         );
         await userSendTransfers(username).then(
+            // Kullanıcının gönderdiği transferler "accountSendTransfers" değişkenine kaydedilir.
             (resolve) => (this.sendTransfers = resolve)
         );
         await userReceiveTransfers(username).then(
+            // Kullanıcının aldığı transferler "accountReceiveTransfers" değişkenine kaydedilir.
             (resolve) => (this.receiveTransfers = resolve)
         );
     }
 
     ngOnInit() {
         this.transferForm = this.formBuilder.group({
+            // Form İle İlgili Validasyonları Belirleme
             cSendAccountNumber: ['', [Validators.required, Validators.min(1)]],
             cReceiveAccountNumber: [
                 '',
@@ -85,6 +88,7 @@ export class TransfersPageComponent implements OnInit {
         });
     }
 
+    /** Validasyon için form değerlerine ulaşmayı sağlayan get metodları */
     get cSendAccountNumber() {
         return this.transferForm.get('cSendAccountNumber');
     }
@@ -99,6 +103,7 @@ export class TransfersPageComponent implements OnInit {
     }
 
     open(content: any, transferType: string) {
+        // Transfer Ekleme Modal'ını Açma
         this.addParamToURL(transferType);
         this.modalService
             .open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -108,15 +113,17 @@ export class TransfersPageComponent implements OnInit {
     }
 
     async onSubmit() {
+        // Transfer Ekleme Fonksiyonu
         this.newTransfer = this.transferForm.value;
         console.log(this.newTransfer);
 
-        // stop here if form is invalid
+        // Eğer form'da herhangi bir validasyon hatası çıkarsa işlem yapılmaz!
         if (this.transferForm.invalid) {
+            alert('Zorunlu Alanları Doldurun!');
             return;
         }
 
-        let customerSendAccount: Account;
+        let customerSendAccount: Account; // Gönderen Kullanıcı Hesap Bilgisi
         await getAccount(
             this.username,
             this.newTransfer.cSendAccountNumber
@@ -124,9 +131,9 @@ export class TransfersPageComponent implements OnInit {
             console.log(response);
             customerSendAccount = response[0];
         });
-        console.log('Send:', customerSendAccount);
-        let customerReceiveAccount: Account;
+        let customerReceiveAccount: Account; // Alan Kullanıcı Hesap Bilgisi
         if (this.getParamFromURL() === 'Virman') {
+            // Eğer hesap türü "Virman" ise alıcı hesabı bilgisi kullanıcın diğer hesaplarından seçilir.
             console.log('virman');
             await getAccount(
                 this.username,
@@ -135,7 +142,7 @@ export class TransfersPageComponent implements OnInit {
                 customerReceiveAccount = response[0];
             });
         } else {
-            console.log('eft');
+            // Eğer hesap türü "Havale" ise alıcı hesabı bilgisi girilen hesap numarası bilgisinde göre alınır.
             await getAccountAnotherUser(
                 this.username,
                 this.newTransfer.cReceiveAccountNumber
@@ -150,27 +157,28 @@ export class TransfersPageComponent implements OnInit {
                 })
                 .catch((error) => console.log(error));
         }
-        console.log('Receive:', customerReceiveAccount);
 
         let convertMoney: number;
         if (customerReceiveAccount !== null) {
+            // Eğer alıcı hesap bilgisi doğru ise;
             convertMoney = this.currencyService.convertForAddTransfer(
+                // Para dönüşümü yapılır.
                 customerSendAccount.currency,
                 customerReceiveAccount.currency,
                 this.newTransfer.amount
             );
             if (this.newTransfer.amount > customerSendAccount.amount) {
+                // Bakiye'nin yeterli olup olmadığı kontrol edilir.
                 alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
                 return;
             } else {
-                console.log('else');
-                let customerSendKey: number;
+                let customerSendKey: number; // Hesap güncelleme işlemi için gönderen kullanıcının hesabının primary key'i alınır.
                 await getAccountKey(customerSendAccount.accountNumber).then(
                     (response) => {
                         customerSendKey = response[0];
                     }
                 );
-                let customerReceiveKey: number;
+                let customerReceiveKey: number; // Hesap güncelleme işlemi için alan kullanıcının hesabının primary key'i alınır.
                 await getAccountKey(customerReceiveAccount.accountNumber).then(
                     (response) => {
                         customerReceiveKey = response[0];
@@ -178,33 +186,35 @@ export class TransfersPageComponent implements OnInit {
                 );
 
                 this.accountService.updateAccountByTransfer(
+                    // Hesaplara gerekli parasal güncellemeler yapılır.
                     customerSendKey,
                     customerReceiveKey,
                     customerSendAccount.amount - this.newTransfer.amount,
                     customerReceiveAccount.amount + convertMoney
                 );
-                console.log(convertMoney);
-            }
-            console.log(customerSendAccount);
-        }
 
-        this.transferSErvice.addTransfer(
-            this.getParamFromURL(),
-            this.username,
-            customerSendAccount.accountName,
-            customerSendAccount.accountNumber,
-            customerSendAccount.amount - this.newTransfer.amount,
-            customerSendAccount.currency,
-            customerReceiveAccount.customerName,
-            customerReceiveAccount.accountName,
-            customerReceiveAccount.accountNumber,
-            -this.newTransfer.amount,
-            this.newTransfer.description,
-            this.now
-        );
+                this.transferSErvice.addTransfer(
+                    // Transfer Eklenir.
+                    this.getParamFromURL(),
+                    this.username,
+                    customerSendAccount.accountName,
+                    customerSendAccount.accountNumber,
+                    customerSendAccount.amount - this.newTransfer.amount,
+                    customerSendAccount.currency,
+                    customerReceiveAccount.customerName,
+                    customerReceiveAccount.accountName,
+                    customerReceiveAccount.accountNumber,
+                    customerReceiveAccount.amount + convertMoney,
+                    -this.newTransfer.amount,
+                    this.newTransfer.description,
+                    this.now
+                );
+            }
+        }
     }
 
     addParamToURL(transferType: string) {
+        // Form'da gerekli yerleri değiştirmek için transfer türünü url'e ekleme fonksiyonu
         this.router.navigate([], {
             queryParams: {
                 transferType: transferType,
@@ -214,14 +224,11 @@ export class TransfersPageComponent implements OnInit {
     }
 
     getParamFromURL(): string {
+        // Form'da gerekli yerleri değiştirmek için transfer türünü url'den alma fonksiyonu
         let transferType: string;
         this.route.queryParams.subscribe((params) => {
             transferType = params['transferType'];
         });
         return transferType;
-    }
-
-    logOut() {
-        this.session.logOut();
     }
 }

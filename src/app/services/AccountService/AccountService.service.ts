@@ -38,6 +38,7 @@ export class AccountService {
     }
 
     updateAccount(accountID: number, amount: number) {
+        // Hesap Güncelleme Fonksiyonu
         database.accounts
             .update(accountID, {
                 amount: amount,
@@ -50,6 +51,7 @@ export class AccountService {
             });
     }
     updateAccountByTransfer(
+        // Transfer Eklerken Hesap Güncelleme Fonksiyonu
         sendId: number,
         receiveId: number,
         amountSend: number,
@@ -76,6 +78,7 @@ export class AccountService {
             });
     }
     deleteAccount(accountID: number) {
+        // Hesap Silme Fonksiyonu
         database.accounts
             .delete(accountID)
             .then(() => {
@@ -88,11 +91,26 @@ export class AccountService {
     }
 }
 
+export async function getAccountName(accountNumber: number) {
+    // Hesap Adı Getirme Fonksiyonu
+    return await database.accounts
+        .where('accountNumber')
+        .equals(accountNumber)
+        .toArray();
+}
 export async function userAccounts(username: string) {
     // Kullanıcının Hesaplarını Getirme Fonksiyonu
     return await database.accounts
         .where('customerName')
         .equalsIgnoreCase(username)
+        .reverse()
+        .toArray();
+}
+export async function userAnotherAccounts(username: string) {
+    // Diğer Kullanıcıların Hesaplarını Getirme Fonksiyonu
+    return await database.accounts
+        .where('customerName')
+        .notEqual(username)
         .reverse()
         .toArray();
 }
@@ -117,11 +135,11 @@ export async function getAccount(username: string, accountNumber: number) {
         .and((account) => account.accountNumber == accountNumber)
         .toArray();
 }
-export async function getAccountWithoutUsername(
+export async function getAccountAnotherUser(
     username: string,
     accountNumber: number
 ) {
-    // Hesap Detayını Getirme Fonksiyonu
+    // Diğer Kullanıcının Hesap Detayını Getirme Fonksiyonu
     return await database.accounts
         .where({ accountNumber: accountNumber })
         .and((account) => account.customerName != username)

@@ -1,8 +1,9 @@
-import {
-    AccountService,
-} from './../../services/AccountService/AccountService.service';
+import { AccountService } from './../../services/AccountService/AccountService.service';
 import { Transfer } from './../../models/Transfer';
-import { userAccountSendTransfers, userAccountReceiveTransfers } from './../../services/TransferService/TransferService.service';
+import {
+    userAccountSendTransfers,
+    userAccountReceiveTransfers,
+} from './../../services/TransferService/TransferService.service';
 import { SessionService } from 'src/app/services/SessionService/SessionService.service';
 import { getAccount } from 'src/app/services/AccountService/AccountService.service';
 import { Account } from './../../models/Account';
@@ -15,12 +16,12 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./AccountDetailPage.component.css'],
 })
 export class AccountDetailPageComponent implements OnInit {
-    account: Account;
-    accountNumber: number;
-    username: string;
+    account: Account; // Hesap Bilgisi
+    accountNumber: number; // Hesap Numarası
+    username: string; // Giriş Yapan Kullanıcı
 
-    accountSendTransfers: Transfer[];
-    accountReceiveTransfers: Transfer[];
+    accountSendTransfers: Transfer[]; // Gönderilen Transferler
+    accountReceiveTransfers: Transfer[]; // Alınan Transferler
 
     constructor(
         private route: ActivatedRoute,
@@ -32,25 +33,28 @@ export class AccountDetailPageComponent implements OnInit {
             // Eğer giriş yapan kullanıcı yoksa Login sayfasına yönlendirilir.
             this.router.navigateByUrl('/login');
         } else {
-            // Eğer giriş yapan kullanıcı varsa token'dan kullanıcı adı bilgisi alınır.
             this.getFirst(session.getToken());
         }
     }
+    
     async getFirst(username: string) {
-        this.username = this.session.getToken();
+        this.username = this.session.getToken(); // Token'dan kullanıcı ismi alınıp "username" değişkenine kaydedilir.
         await getAccount(
+            // Hesap bilgisi url'den gelen accountNumber değeri ile "account" değişkenine kaydedilir.
             username,
             this.route.snapshot.params.accountNumber
         ).then((resolve) => {
             this.account = resolve[0];
         });
         await userAccountSendTransfers(
+            // Kullanıcının gönderdiği transferler "accountSendTransfers" değişkenine kaydedilir.
             username,
             this.route.snapshot.params.accountNumber
         ).then((response) => {
             this.accountSendTransfers = response;
         });
         await userAccountReceiveTransfers(
+            // Kullanıcının aldığı transferler "accountReceiveTransfers" değişkenine kaydedilir.
             username,
             this.route.snapshot.params.accountNumber
         ).then((response) => {
@@ -59,17 +63,4 @@ export class AccountDetailPageComponent implements OnInit {
     }
 
     ngOnInit() {}
-
-    // async getAccountNameWithAccountNumber(accountNumber: number) {
-    //     let accountName: string;
-
-    //     await getAccountName(accountNumber).then((response) => {
-    //         accountName = response[0].accountName;
-    //     });
-    //     return accountName;
-    // }
-
-    logOut() {
-        this.session.logOut();
-    }
 }

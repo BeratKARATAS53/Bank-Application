@@ -16,10 +16,10 @@ import { CurrencyConverterService } from 'src/app/services/CurrencyConverter/Cur
     styleUrls: ['./AccountCard.component.css'],
 })
 export class AccountCardComponent implements OnInit {
-    accounts: Account[];
-    numberOfAccounts: number;
+    accounts: Account[]; // Kullanıcının Hesapları
+    numberOfAccounts: number; // Kullanıcının Hesap Adeti
 
-    username: string;
+    username: string; // Giriş Yapan Kullanıcı
 
     closeResult: string;
     constructor(
@@ -38,28 +38,31 @@ export class AccountCardComponent implements OnInit {
     }
 
     async getFirst(username: string) {
-        this.username = this.session.getToken();
+        this.username = this.session.getToken(); // Token'dan kullanıcı ismi alınıp "username" değişkenine kaydedilir.
         await userAccounts(username).then(
+            // Kullanıcının hesapları "accounts" değişkenine kaydedilir.
             (resolve) => (this.accounts = resolve)
         );
         await numberOfAccounts(username).then(
+            // Kullanıcının hesap adeti "numberOfAccounts" değişkenine kaydedilir.
             (resolve) => (this.numberOfAccounts = resolve)
         );
     }
     ngOnInit() {}
-    
 
     async deleteAccount(accountNumber: number) {
+        // Hesap Silme Fonksiyonu
         let uniqueKey: number;
         await getAccountKey(accountNumber).then((response) => {
+            // Öncelikle hesabın primary key'i alınır.
             uniqueKey = response[0];
-            console.log(response)
+            console.log(response);
         });
-        this.accountService.deleteAccount(uniqueKey);
+        this.accountService.deleteAccount(uniqueKey); // Alınan primary key ile hesap silinir.
     }
 
     gotoDetails(accountNumber: any) {
+        // Detay Sayfasına Yönlendirme Fonksiyonu
         this.router.navigate(['/account/', accountNumber]);
     }
-
 }

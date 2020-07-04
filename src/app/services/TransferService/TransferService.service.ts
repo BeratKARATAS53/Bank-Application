@@ -1,4 +1,3 @@
-import { getAccount } from './../AccountService/AccountService.service';
 import { Injectable } from '@angular/core';
 import { database } from '../DexieService/BankApplicationDB';
 
@@ -19,6 +18,7 @@ export class TransferService {
         cReceiveName: string,
         cReceiveAccountName: string,
         cReceiveAccountNumber: number,
+        cReceiveAccountAmount: number,
         amount: number,
         description: string,
         date: string
@@ -34,6 +34,7 @@ export class TransferService {
                 cReceiveName: cReceiveName,
                 cReceiveAccountName: cReceiveAccountName,
                 cReceiveAccountNumber: cReceiveAccountNumber,
+                cReceiveAccountAmount: cReceiveAccountAmount,
                 amount: amount,
                 description: description,
                 date: date,
@@ -49,7 +50,7 @@ export class TransferService {
 }
 
 export async function userSendTransfers(username: string) {
-    // Kullanıcının Transferlerini Getirme Fonksiyonu
+    // Kullanıcının Gönderdiği Transferleri Getirme Fonksiyonu
     return await database.transfers
         .where('cSendName')
         .equalsIgnoreCase(username)
@@ -57,7 +58,7 @@ export async function userSendTransfers(username: string) {
         .toArray();
 }
 export async function userReceiveTransfers(username: string) {
-    // Kullanıcının Transferlerini Getirme Fonksiyonu
+    // Kullanıcının Aldığı Transferleri Getirme Fonksiyonu
     return await database.transfers
         .where('cReceiveName')
         .equalsIgnoreCase(username)
@@ -66,7 +67,7 @@ export async function userReceiveTransfers(username: string) {
         .toArray();
 }
 export async function userTransfersLimitTen(username: string) {
-    // Kullanıcının Transferlerini Getirme Fonksiyonu
+    // Kullanıcının Son 10 Hesap Hareketlerini Getirme Fonksiyonu
     return await database.transfers
         .where('cSendName')
         .equalsIgnoreCase(username)
@@ -96,17 +97,3 @@ export async function userAccountReceiveTransfers(
         .reverse()
         .toArray();
 }
-// export async function getTransferKey(username: string, accountNumber: number) {
-//     // Transferin Primary Key'ini Getirme Fonksiyonu
-//     return await database.transfers
-//         .where({ customerName: username })
-//         .and((account) => account.accountNumber == accountNumber)
-//         .primaryKeys();
-// }
-// export async function getTransfer(username: string, accountNumber: number) {
-//     // Hesap Detayını Getirme Fonksiyonu
-//     return await database.transfers
-//         .where({ customerName: username })
-//         .and((account) => account.accountNumber == accountNumber)
-//         .toArray();
-// }

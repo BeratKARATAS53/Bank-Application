@@ -15,10 +15,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./Sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
-    account: Account;
-    accountNumber: number;
-    username: string;
-    numberOfAccounts: number;
+    username: string;  // Giriş Yapan Kullanıcı
+    numberOfAccounts: number; // Kullanıcının Hesap Adeti
 
     closeResult: string;
 
@@ -33,27 +31,22 @@ export class SidebarComponent implements OnInit {
             // Eğer giriş yapan kullanıcı yoksa Login sayfasına yönlendirilir.
             this.router.navigateByUrl('/login');
         } else {
-            // Eğer giriş yapan kullanıcı varsa token'dan kullanıcı adı bilgisi alınır.
             this.getFirst(session.getToken());
         }
     }
 
     async getFirst(username: string) {
-        this.username = this.session.getToken();
+        this.username = this.session.getToken(); // Token'dan kullanıcı ismi alınıp "username" değişkenine kaydedilir.
         await numberOfAccounts(username).then(
+            // Kullanıcının hesap adeti "numberOfAccounts" değişkenine kaydedilir.
             (resolve) => (this.numberOfAccounts = resolve)
         );
-        await getAccount(
-            this.username,
-            this.route.snapshot.params.accountNumber
-        ).then((resolve) => {
-            this.account = resolve[0];
-        });
     }
 
     ngOnInit() {}
 
     openModal(content: any) {
+        // Oturumu Kapat Modelini Açma Fonksiyonu
         this.modalService
             .open(content, {
                 ariaLabelledBy: 'modal-basic-title',
@@ -65,6 +58,7 @@ export class SidebarComponent implements OnInit {
     }
 
     logOut() {
+        // Oturumu Kapatma Fonksiyonu
         this.session.logOut();
     }
 }
