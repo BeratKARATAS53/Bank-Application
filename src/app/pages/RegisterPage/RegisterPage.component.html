@@ -1,8 +1,8 @@
 <div class="container-sm">
     <div class="login-container">
-        <h2>Kayıt Ol</h2>
+        <h2>{{ "login.register" | translate }}</h2>
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <label for="username">Kullanıcı Adı</label>
+            <label for="username">{{ "login.username" | translate }}</label>
             <input
                 type="text"
                 formControlName="username"
@@ -14,11 +14,11 @@
                 *ngIf="username.errors && (username.dirty || username.touched)"
             >
                 <p *ngIf="username.errors.required">
-                    Kullanıcı Adı Girmek Zorunlu!
+                    {{ "login.errors.usernameRequired" | translate }}
                 </p>
             </div>
             <div class="form-group">
-                <label for="password">Şifre</label>
+                <label for="password">{{ "login.password" | translate }}</label>
                 <input
                     type="password"
                     formControlName="password"
@@ -33,20 +33,20 @@
                     "
                 >
                     <p *ngIf="password.errors.required">
-                        Şifre Girmek Zorunlu!
+                        {{ "login.errors.passwordRequired" | translate }}
                     </p>
                     <p *ngIf="password.errors.minlength">
-                        Şifre Minimum 6 Karakterli Olmalı!
+                        {{ "login.errors.passwordMin" | translate }}
                     </p>
                 </div>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary btn-lg btn-block">
-                    Kayıt Ol
+                    {{ "login.register" | translate }}
                 </button>
-                <a routerLink="/login" class="btn btn-link btn-lg btn-block"
-                    >Giriş Yap</a
-                >
+                <a routerLink="/login" class="btn btn-link btn-lg btn-block">
+                    {{ "login.login" | translate }}
+                </a>
             </div>
         </form>
     </div>

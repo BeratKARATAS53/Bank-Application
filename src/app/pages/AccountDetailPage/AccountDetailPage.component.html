@@ -1,54 +1,54 @@
 <app-Sidebar></app-Sidebar>
 <div class="main">
     <div class="container-sm">
-        <h2>Hesap Detayı</h2>
+        <h2>{{ "account.accountDetail" | translate }}</h2>
         <hr />
         <div class="row">
             <div class="col-3">
                 <h5>
-                    Hesap Adı:
-                    <span
-                        >{{ account.accountName }} ({{
-                            account.currency
-                        }})</span
-                    >
+                    {{ "account.accountName" | translate }}:
+                    <span>
+                        {{ account.accountName }} ({{ account.currency }})
+                    </span>
                 </h5>
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <h5>
-                    Hesap No:
+                    {{ "account.accountNumber" | translate }}:
                     <span>{{ account.accountNumber }}</span>
                 </h5>
             </div>
             <div class="col-2">
                 <h5>
-                    Bakiye:
+                    {{ "account.balance" | translate }}:
                     <span>{{ account.amount | myCurrency }}</span>
                 </h5>
             </div>
             <div class="col-2">
                 <h5>
-                    Faiz Oranı:
+                    {{ "account.rate" | translate }}:
                     <span>%{{ account.rate }}</span>
                 </h5>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <h5 style="color: tomato;">
-                    <span style="color: darkgrey;">Oluşturulma Tarihi: </span
-                    >{{ account.date }}
+                    <span style="color: darkgrey;">
+                        {{ "account.date" | translate }}:
+                    </span>
+                    {{ account.date }}
                 </h5>
             </div>
         </div>
         <br />
-        <h3>Hesap İşlemleri</h3>
+        <h3>{{ "account.accountActions" | translate }}</h3>
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Alıcı Hesabı</th>
-                    <th>Tutar</th>
-                    <th>Açıklama</th>
-                    <th>Bakiye</th>
-                    <th>Tarih</th>
+                    <th>{{ "transfer.receiveAccountName" | translate }}</th>
+                    <th>{{ "account.amount" | translate }}</th>
+                    <th>{{ "transfer.description" | translate }}</th>
+                    <th>{{ "account.balance" | translate }}</th>
+                    <th>{{ "account.date" | translate }}</th>
                 </tr>
             </thead>
             <tr *ngFor="let transfer of accountSendTransfers">
@@ -58,7 +58,10 @@
                 <td *ngIf="transfer.transferType === 'Virman'">
                     {{ transfer.cReceiveAccountNumber }}
                 </td>
-                <td>{{ transfer.amount | myCurrency }} {{ transfer.cSendAccountCurrency }}</td>
+                <td>
+                    {{ transfer.amount | myCurrency }}
+                    {{ transfer.cSendAccountCurrency }}
+                </td>
                 <td>{{ transfer.description }}</td>
                 <td>{{ transfer.cSendAccountAmount | myCurrency }}</td>
                 <td>{{ transfer.date }}</td>
@@ -70,7 +73,10 @@
                 <td *ngIf="transfer.transferType === 'Virman'">
                     {{ transfer.cReceiveAccountNumber }}
                 </td>
-                <td>{{ transfer.amount | absoluteValue | myCurrency }} {{ transfer.cSendAccountCurrency }}</td>
+                <td>
+                    {{ transfer.amount | absoluteValue | myCurrency }}
+                    {{ transfer.cSendAccountCurrency }}
+                </td>
                 <td>{{ transfer.description }}</td>
                 <td>{{ transfer.cReceiveAccountAmount | myCurrency }}</td>
                 <td>{{ transfer.date }}</td>

@@ -1,13 +1,12 @@
-<app-Sidebar></app-Sidebar>
 <div class="main">
     <div class="container-sm">
         <div class="row">
             <div class="col-10">
-                <h2>Hesaplar</h2>
+                <h2>{{ "sidebar.accounts" | translate }}</h2>
                 <hr />
                 <app-AccountCard></app-AccountCard>
                 <hr />
-                <h2>Son Hesap Hareketleri</h2>
+                <h2>{{ "transfer.lastActivities" | translate }}</h2>
                 <hr />
                 <div
                     *ngIf="
@@ -19,16 +18,30 @@
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Gönderen Hesap Numarası</th>
-                                <th>Alan Hesap Numarası</th>
-                                <th>Tutar</th>
-                                <th>Açıklama</th>
+                                <th>
+                                    {{
+                                        "transfer.sendAccountNumber" | translate
+                                    }}
+                                </th>
+                                <th>
+                                    {{
+                                        "transfer.receiveAccountNumber"
+                                            | translate
+                                    }}
+                                </th>
+                                <th>{{ "account.amount" | translate }}</th>
+                                <th>
+                                    {{ "transfer.description" | translate }}
+                                </th>
                             </tr>
                         </thead>
                         <tr *ngFor="let transfer of sendTransfers">
                             <td>{{ transfer.cSendAccountNumber }}</td>
                             <td>{{ transfer.cReceiveAccountNumber }}</td>
-                            <td>{{ transfer.amount | myCurrency }} {{ transfer.cSendAccountCurrency }}</td>
+                            <td>
+                                {{ transfer.amount | myCurrency }}
+                                {{ transfer.cSendAccountCurrency }}
+                            </td>
                             <td>{{ transfer.description }}</td>
                         </tr>
                         <tr *ngFor="let transfer of receiveTransfers">
@@ -37,21 +50,22 @@
                             <td>
                                 {{
                                     transfer.amount | absoluteValue | myCurrency
-                                }} {{ transfer.cSendAccountCurrency }}
+                                }}
+                                {{ transfer.cSendAccountCurrency }}
                             </td>
                             <td>{{ transfer.description }}</td>
                         </tr>
                     </table>
                 </div>
-                <ng-template #noTransfer
-                    ><h4>Hesap Hareketiniz Bulunmamakta.</h4></ng-template
-                >
+                <ng-template #noTransfer>
+                    <h4>{{ "transfer.noActivities" | translate }}</h4>
+                </ng-template>
             </div>
             <div class="col-2">
-                <h2>Döviz Kuru</h2>
-                <h5>Dolar: 6 TL</h5>
-                <h5>Euro: 7 TL</h5>
-                <h5>Altın: 390 TL</h5>
+                <h2>{{ "exchangeRate" | translate }}</h2>
+                <h5>{{ "account.currency.dolar" | translate }}: 6 TL</h5>
+                <h5>{{ "account.currency.euro" | translate }}: 7 TL</h5>
+                <h5>{{ "account.currency.gold" | translate }}: 390 TL</h5>
             </div>
         </div>
     </div>

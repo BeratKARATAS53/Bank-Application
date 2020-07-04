@@ -29,7 +29,7 @@ export class LoginPageComponent implements OnInit {
         this.loginForm = this.formBuilder.group({
             // Form İle İlgili Validasyonları Belirleme
             username: ['', Validators.required],
-            password: ['', [Validators.required, Validators.minLength(6)]],
+            password: ['', Validators.required],
         });
     }
 
@@ -46,8 +46,8 @@ export class LoginPageComponent implements OnInit {
         this.customer = this.loginForm.value;
 
         // Eğer form'da herhangi bir validasyon hatası çıkarsa işlem yapılmaz!
-            if (this.loginForm.invalid) {
-                alert('Zorunlu Alanları Doldurun!');
+        if (this.loginForm.invalid) {
+            alert('Zorunlu Alanları Doldurun!');
             return;
         }
 

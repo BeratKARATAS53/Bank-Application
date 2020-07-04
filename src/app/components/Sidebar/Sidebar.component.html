@@ -1,27 +1,57 @@
-<div class="sidenav">
+<div class="sidebar">
     <h3>{{ username }}</h3>
     <hr />
-    <a href="/main">Ana Sayfa</a>
+    <a routerLink="/main" routerLinkActive="selected">
+        {{ "sidebar.main" | translate }}
+    </a>
     <hr />
-    <a href="/accounts">Hesaplarım ({{ numberOfAccounts }})</a>
+    <a routerLink="/accounts" routerLinkActive="selected">
+        {{ "sidebar.accounts" | translate }} ({{ numberOfAccounts }})
+    </a>
     <hr />
-    <a href="/transfers">Transferlerim</a>
+    <a routerLink="/transfers" routerLinkActive="selected">
+        {{ "sidebar.transfers" | translate }}
+    </a>
     <hr />
-    <a href="#last">Son Hareketler</a>
+    <div class="btn-group" role="group">
+        <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
+            {{ "sidebar.logout" | translate }}
+        </button>
+    </div>
+
     <hr />
-    <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
-        Çıkış Yap
-    </button>
+    <div class="btn-group" role="group">
+        <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="changeLanguage('tr')"
+        >
+            TÜRKÇE
+        </button>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="changeLanguage('en')"
+        >
+            ENGLISH
+        </button>
+    </div>
 </div>
 
 <ng-template #logOutModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Emin Misiniz?</h4>
+        <h4 class="modal-title" id="modal-basic-title">
+            {{ "sidebar.modal.title" | translate }}
+        </h4>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success btn-lg" (click)="logOut()">Evet</button>
+        <button class="btn btn-success btn-lg" (click)="logOut()">
+            {{ "sidebar.modal.yes" | translate }}
+        </button>
         <button class="btn btn-danger btn-lg" (click)="modal.close()">
-            Hayır
+            {{ "sidebar.modal.no" | translate }}
         </button>
     </div>
 </ng-template>
+
+<router-outlet></router-outlet>

@@ -1,9 +1,8 @@
-<app-Sidebar></app-Sidebar>
 <div class="main">
     <div class="container-sm">
         <div class="row">
             <div class="col-10">
-                <h2>Transferlerim</h2>
+                <h2>{{ "sidebar.transfers" | translate }}</h2>
                 <div
                     *ngIf="
                         sendTransfers.length !== 0 ||
@@ -14,13 +13,28 @@
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Gönderen Hesap Adı</th>
-                                <th>Gönderen Hesap Numarası</th>
-                                <th>Alan Hesap Numarası</th>
-                                <th>Para Birimi</th>
-                                <th>Tutar</th>
-                                <th>Açıklama</th>
-                                <th>Tarih</th>
+                                <th>
+                                    {{ "transfer.sendAccountName" | translate }}
+                                </th>
+                                <th>
+                                    {{
+                                        "transfer.sendAccountNumber" | translate
+                                    }}
+                                </th>
+                                <th>
+                                    {{
+                                        "transfer.receiveAccountNumber"
+                                            | translate
+                                    }}
+                                </th>
+                                <th>
+                                    {{ "account.currency.title" | translate }}
+                                </th>
+                                <th>{{ "account.amount" | translate }}</th>
+                                <th>
+                                    {{ "transfer.description" | translate }}
+                                </th>
+                                <th>{{ "account.date" | translate }}</th>
                             </tr>
                         </thead>
                         <tr *ngFor="let transfer of sendTransfers">
@@ -48,7 +62,9 @@
                     </table>
                 </div>
                 <ng-template #noTransfer>
-                    <h4>Transferiniz Bulunmamakta.</h4>
+                    <h4>
+                        {{ "transfer.noTransfers" | translate }}
+                    </h4>
                 </ng-template>
             </div>
             <div class="col-2">
@@ -56,14 +72,14 @@
                     class="btn btn-lg btn-primary"
                     (click)="open(addTransfer, 'Virman')"
                 >
-                    Virman Ekle
+                    {{ "transfer.modal.virman" | translate }}
                 </button>
                 <hr />
                 <button
                     class="btn btn-lg btn-primary"
                     (click)="open(addTransfer, 'Havale')"
                 >
-                    Havale Ekle
+                    {{ "transfer.modal.havale" | translate }}
                 </button>
             </div>
         </div>
@@ -72,15 +88,14 @@
     <ng-template #addTransfer let-modal>
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
-                {{ getParamFromURL() }} Ekleme
+                {{ getParamFromURL() | translate }}
             </h4>
         </div>
         <div class="modal-body">
             <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
-                <label for="cSendAccountNumber"
-                    >Gönderen Hesap Numarası *</label
-                >
-
+                <label for="cSendAccountNumber">
+                    {{ "transfer.sendAccountNumber" | translate }} *
+                </label>
                 <select
                     class="custom-select custom-select-lg mb-3"
                     formControlName="cSendAccountNumber"
@@ -88,10 +103,14 @@
                     <option
                         *ngFor="let account of accounts"
                         value="{{ account.accountNumber }}"
-                        >Hesap No: {{ account.accountNumber }}, Bakiye:
-                        {{ account.amount }}, Para Birimi:
-                        {{ account.currency }}</option
                     >
+                        {{ "account.accountNumber" | translate }}
+                        {{ account.accountNumber }},
+                        {{ "account.accountNumber" | translate }}
+                        {{ account.amount }},
+                        {{ "account.currency.title" | translate }}
+                        {{ account.currency }}
+                    </option>
                 </select>
                 <div
                     class="alert alert-danger"
@@ -101,15 +120,15 @@
                     "
                 >
                     <p *ngIf="cSendAccountNumber.errors.required">
-                        Gönderen Hesap Bilgisi Seçilmek Zorunda!
+                        {{ "transfer.modal.errors.sendRequired" | translate }}
                     </p>
                 </div>
                 <div class="alert alert-info">
-                    Para Birimleri Arasında Dönüşüm Yapıldığını Unutmayın!
+                    {{ "account.modal.errors.currencyConvertion" | translate }}
                 </div>
-                <label for="cReceiveAccountNumber"
-                    >Alıcı Hesap Numarası *</label
-                >
+                <label for="cReceiveAccountNumber">
+                    {{ "transfer.receiveAccountNumber" | translate }} *
+                </label>
                 <div *ngIf="getParamFromURL() === 'Virman'; else havaleBlock">
                     <select
                         class="custom-select custom-select-lg mb-3"
@@ -118,10 +137,14 @@
                         <option
                             *ngFor="let account of accounts"
                             value="{{ account.accountNumber }}"
-                            >Hesap No: {{ account.accountNumber }}, Bakiye:
-                            {{ account.amount }}, Para Birimi:
-                            {{ account.currency }}</option
                         >
+                            {{ "account.accountNumber" | translate }}
+                            {{ account.accountNumber }},
+                            {{ "account.accountNumber" | translate }}
+                            {{ account.amount }},
+                            {{ "account.currency.title" | translate }}
+                            {{ account.currency }}
+                        </option>
                     </select>
                 </div>
                 <ng-template #havaleBlock>
@@ -140,14 +163,17 @@
                         "
                     >
                         <p *ngIf="cReceiveAccountNumber.errors.required">
-                            Alıcı Hesap Bilgisi Seçilmek Zorunda!
+                            {{
+                                "transfer.modal.errors.receiveRequired"
+                                    | translate
+                            }}
                         </p>
                         <p *ngIf="cReceiveAccountNumber.errors.min">
-                            Minimum 1 Birim Girmek Zorunlu!
+                            {{ "transfer.modal.errors.numberMin" | translate }}
                         </p>
                     </div></ng-template
                 >
-                <label for="amount">Tutar *</label>
+                <label for="amount">{{ "account.amount" | translate }} *</label>
                 <input
                     type="number"
                     formControlName="amount"
@@ -159,13 +185,15 @@
                     *ngIf="amount.errors && (amount.dirty || amount.touched)"
                 >
                     <p *ngIf="amount.errors.required">
-                        Tutar Girmek Zorunlu!
+                        {{ "account.modal.errors.amountRequired" | translate }}
                     </p>
                     <p *ngIf="amount.errors.min">
-                        Minimum 1 Birim Girmek Zorunlu!
+                        {{ "account.modal.errors.amountMin" | translate }}
                     </p>
                 </div>
-                <label for="description">Açıklama *</label>
+                <label for="description">
+                    {{ "transfer.description" | translate }} *
+                </label>
                 <input
                     type="text"
                     formControlName="description"
@@ -179,12 +207,15 @@
                     "
                 >
                     <p *ngIf="description.errors.required">
-                        Açıklama Girmek Zorunlu!
+                        {{
+                            "transfer.modal.errors.descriptionRequired"
+                                | translate
+                        }}
                     </p>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-lg btn-block">
-                        Transfer Ekle
+                        {{ "transfer.modal.add" | translate }}
                     </button>
                 </div>
             </form>

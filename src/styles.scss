@@ -22,7 +22,7 @@ p {
     font-size: 12px;
     padding-top: 4px;
 }
-.sidenav {
+.sidebar {
     font-family: "Poppins", sans-serif;
     height: 100%;
     width: 250px;
@@ -35,7 +35,7 @@ p {
     padding-top: 20px;
 }
 
-.sidenav a {
+.sidebar a {
     padding: 6px 8px 6px 16px;
     text-decoration: none;
     font-size: 25px;
@@ -45,30 +45,30 @@ p {
     padding-bottom: 20px;
 }
 
-.sidenav a:hover {
-    color: #ffcccc;
+a.selected,
+a:hover {
+    color: #a8e063;
 }
 
-.sidenav img {
+.sidebar img {
     display: flex;
     text-align: center;
     width: 50%;
     height: 15%;
 }
 
-.sidenav button {
-    width: 80%;
+.sidebar button {
     color: wheat;
     margin: 20px;
 }
 
-.sidenav h3 {
+.sidebar h3 {
     text-align: center;
     color: #f1f1f1;
 }
 
 .main {
-    margin-left: 250px; /* Same as the width of the sidenav */
+    margin-left: 250px; /* Same as the width of the sidebar */
     padding: 0px 10px;
 }
 
@@ -110,4 +110,12 @@ h5 {
     padding: 20px;
     min-width: 150px;
     min-height: 150px;
+}
+
+.btn-group {
+    width: 100%;
+}
+
+.main button {
+    width: 100%;
 }
