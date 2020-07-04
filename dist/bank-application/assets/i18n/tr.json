@@ -1,0 +1,80 @@
+{
+    "sidebar": {
+        "main": "Ana Sayfa",
+        "accounts": "Hesaplar",
+        "transfers": "Transferler",
+        "logout": "Çıkış Yap",
+        "modal": {
+            "title": "Emin Misiniz?",
+            "yes": "Evet",
+            "no": "Hayır"
+        }
+    },
+    "login": {
+        "username": "Kullanıcı Adı",
+        "password": "Şifre",
+        "errors": {
+            "usernameRequired": "Kullanıcı Adı Girmek Zorunlu!",
+            "passwordRequired": "Şifre Girmek Zorunlu!",
+            "passwordMin": "Şifre Minimum 6 Karakterli Olmalı!"
+        },
+        "login": "Giriş Yap",
+        "register": "Kayıt Ol"
+    },
+    "account": {
+        "accountName": "Hesap Adı",
+        "accountNumber": "Hesap Numarası",
+        "amount": "Tutar",
+        "currency": {
+            "title": "Para Birimi",
+            "turkishLira": "Türk Lirası (TL)",
+            "dolar": "Dolar ($)",
+            "euro": "Euro (€)",
+            "gold": "Altın"
+        },
+        "rate": "Faiz Oranı",
+        "balance": "Bakiye",
+        "date": "Tarih",
+        "action": "İşlem",
+        "accountActions": "Hesap İşlemleri",
+        "details": "Ayrıntılar",
+        "accountDetail": "Hesap Detayı",
+        "noAccounts": "Hesabınız Bulunmamakta.",
+        "withdrawAccount": "Paranın Çekileceği Hesap",
+        "modal": {
+            "addAccount": "Hesap Ekle",
+            "errors": {
+                "accountNameRequired": "Hesap Adı Girmek Zorunlu!",
+                "amountRequired": "Tutar Girmek Zorunlu!",
+                "amountMin": "Minimum 1 Birim Girmek Zorunlu!",
+                "withdrawAccountRequired": "Paranın Çekileceği Hesap Seçilmek Zorunda!",
+                "currencyConvertion": "Para Birimleri Arasında Dönüşüm Yapıldığını Unutmayın!",
+                "currencyRequired": "Para Birimi Seçilmek Zorunda!",
+                "firstAccount": "İlk Hesabınızı 10.000 TL İle Oluşturmanız Zorunludur!"
+            }
+        },
+        "deleteAccount": "Hesabı Sil"
+    },
+    "transfer": {
+        "lastActivities": "Son Hesap Hareketleri",
+        "sendAccountNumber": "Gönderen Hesap Numarası",
+        "sendAccountName": "Gönderen Hesap Adı",
+        "receiveAccountNumber": "Alıcı Hesap Numarası",
+        "receiveAccountName": "Alıcı Hesap Adı",
+        "description": "Açıklama",
+        "noTransfers": "Transferiniz Bulunmamakta.",
+        "noActivities": "Hesap Hareketiniz Bulunmamakta.",
+        "modal": {
+            "add": "Ekle",
+            "virman": "Virman Ekle",
+            "havale": "Havale Ekle",
+            "errors": {
+                "sendRequired": "Gönderen Hesap Bilgisi Seçilmek Zorunda!",
+                "receiveRequired": "Alıcı Hesap Bilgisi Seçilmek Zorunda!",
+                "numberMin": "Hesap Numarası 6 Karakterli Olmak Zorunda!",
+                "descriptionRequired": "Açıklama Girmek Zorunlu!"
+            }
+        }
+    },
+    "exchangeRate": "Döviz Kuru"
+}
