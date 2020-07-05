@@ -159,56 +159,65 @@ export class TransfersPageComponent implements OnInit {
         }
 
         let convertMoney: number;
+        // Eğer alıcı hesap bilgisi doğru ise;
         if (customerReceiveAccount !== null) {
-            // Eğer alıcı hesap bilgisi doğru ise;
-            convertMoney = this.currencyService.convertForAddTransfer(
-                // Para dönüşümü yapılır.
-                customerSendAccount.currency,
-                customerReceiveAccount.currency,
-                this.newTransfer.amount
-            );
-            if (this.newTransfer.amount > customerSendAccount.amount) {
-                // Bakiye'nin yeterli olup olmadığı kontrol edilir.
-                alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
-                return;
-            } else {
-                let customerSendKey: number; // Hesap güncelleme işlemi için gönderen kullanıcının hesabının primary key'i alınır.
-                await getAccountKey(customerSendAccount.accountNumber).then(
-                    (response) => {
-                        customerSendKey = response[0];
-                    }
-                );
-                let customerReceiveKey: number; // Hesap güncelleme işlemi için alan kullanıcının hesabının primary key'i alınır.
-                await getAccountKey(customerReceiveAccount.accountNumber).then(
-                    (response) => {
-                        customerReceiveKey = response[0];
-                    }
-                );
-
-                this.accountService.updateAccountByTransfer(
-                    // Hesaplara gerekli parasal güncellemeler yapılır.
-                    customerSendKey,
-                    customerReceiveKey,
-                    customerSendAccount.amount - this.newTransfer.amount,
-                    customerReceiveAccount.amount + convertMoney
-                );
-
-                this.transferSErvice.addTransfer(
-                    // Transfer Eklenir.
-                    this.getParamFromURL(),
-                    this.username,
-                    customerSendAccount.accountName,
-                    customerSendAccount.accountNumber,
-                    customerSendAccount.amount - this.newTransfer.amount,
+            // Eğer alıcı ve gönderen bilgileri aynı değilse; yani kişi A hesabından tekrar A hesabına işlem yapamaz!
+            if (
+                customerSendAccount.accountNumber !==
+                customerReceiveAccount.accountNumber
+            ) {
+                convertMoney = this.currencyService.convertForAddTransfer(
+                    // Para dönüşümü yapılır.
                     customerSendAccount.currency,
-                    customerReceiveAccount.customerName,
-                    customerReceiveAccount.accountName,
-                    customerReceiveAccount.accountNumber,
-                    customerReceiveAccount.amount + convertMoney,
-                    -this.newTransfer.amount,
-                    this.newTransfer.description,
-                    this.now
+                    customerReceiveAccount.currency,
+                    this.newTransfer.amount
                 );
+                if (this.newTransfer.amount > customerSendAccount.amount) {
+                    // Bakiye'nin yeterli olup olmadığı kontrol edilir.
+                    alert('Paranın Çekileceği Hesabınızda Yeterli Bakiye Yok!');
+                    return;
+                } else {
+                    let customerSendKey: number; // Hesap güncelleme işlemi için gönderen kullanıcının hesabının primary key'i alınır.
+                    await getAccountKey(customerSendAccount.accountNumber).then(
+                        (response) => {
+                            customerSendKey = response[0];
+                        }
+                    );
+                    let customerReceiveKey: number; // Hesap güncelleme işlemi için alan kullanıcının hesabının primary key'i alınır.
+                    await getAccountKey(
+                        customerReceiveAccount.accountNumber
+                    ).then((response) => {
+                        customerReceiveKey = response[0];
+                    });
+
+                    this.accountService.updateAccountByTransfer(
+                        // Hesaplara gerekli parasal güncellemeler yapılır.
+                        customerSendKey,
+                        customerReceiveKey,
+                        customerSendAccount.amount - this.newTransfer.amount,
+                        customerReceiveAccount.amount + convertMoney
+                    );
+
+                    this.transferSErvice.addTransfer(
+                        // Transfer Eklenir.
+                        this.getParamFromURL(),
+                        this.username,
+                        customerSendAccount.accountName,
+                        customerSendAccount.accountNumber,
+                        customerSendAccount.amount - this.newTransfer.amount,
+                        customerSendAccount.currency,
+                        customerReceiveAccount.customerName,
+                        customerReceiveAccount.accountName,
+                        customerReceiveAccount.accountNumber,
+                        customerReceiveAccount.amount + convertMoney,
+                        -this.newTransfer.amount,
+                        this.newTransfer.description,
+                        this.now
+                    );
+                }
+            } else {
+                alert('Gönderen ve Alıcı Hesapları Aynı Olamaz!');
+                return;
             }
         }
     }

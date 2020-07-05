@@ -1,0 +1,80 @@
+{
+    "sidebar": {
+        "main": "Main Page",
+        "accounts": "Accounts",
+        "transfers": "Transfers",
+        "logout": "Logout",
+        "modal": {
+            "title": "Are You Sure?",
+            "yes": "Yes",
+            "no": "No"
+        }
+    },
+    "login": {
+        "username": "Username",
+        "password": "Password",
+        "errors": {
+            "usernameRequired": "Entering an Username is Required!",
+            "passwordRequired": "Entering a Password is Required!",
+            "passwordMin": "Password Must Have At Least 6 Characters!"
+        },
+        "login": "Login",
+        "register": "Register"
+    },
+    "account": {
+        "accountName": "Account Name",
+        "accountNumber": "Account Number",
+        "amount": "Amount",
+        "currency": {
+            "title": "Currency",
+            "turkishLira": "Turkish Lira (TL)",
+            "dolar": "Dolar ($)",
+            "euro": "Euro (€)",
+            "gold": "Gold"
+        },
+        "rate": "Rate",
+        "balance": "Balance",
+        "date": "Date",
+        "action": "Action",
+        "accountActions": "Account Actions",
+        "details": "Details",
+        "accountDetail": "Account Detail",
+        "noAccounts": "You don't have any account.",
+        "modal": {
+            "addAccount": "Add Account",
+            "errors": {
+                "accountNameRequired": "Entering an Account Name is Required!",
+                "amountRequired": "Entering an Amount is Required!",
+                "amountMin": "Entering a Minimum of 1 Unit is Required!",
+                "withdrawAccount": "Money Withdrawal Account",
+                "withdrawAccountRequired": "Selecting a Withdrawal Account is Required!",
+                "currencyConvertion": "Remember That Conversion Are Made Between Currencies!",
+                "currencyRequired": "Selecting a Currency is Required!",
+                "firstAccount": "You have to create your first account with 10.000 TL!"
+            }
+        },
+        "deleteAccount": "Delete Account"
+    },
+    "transfer": {
+        "lastActivities": "Recent Account Activities",
+        "sendAccountNumber": "Send Account Number",
+        "sendAccountName": "Send Account Name",
+        "receiveAccountNumber": "Receive Account Number",
+        "receiveAccountName": "Receive Account Name",
+        "description": "Description",
+        "noTransfers": "You have no transfer.",
+        "noActivities": "You have no account activity.",
+        "modal": {
+            "add": "Add",
+            "virman": "Add Virman",
+            "havale": "Add Havale",
+            "errors": {
+                "sendRequired": "Entering a Sender Account Information is Required!",
+                "receiveRequired": "Entering a Receiver Account Information is Required!",
+                "numberMin": "Account Number Must Have 6 Characters!",
+                "descriptionRequired": "Entering a Description is Required!"
+            }
+        }
+    },
+    "exchangeRate": "Exchange Rate"
+}
