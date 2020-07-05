@@ -26,11 +26,11 @@ const routes: Routes = [
                 path: 'account/:accountNumber',
                 component: AccountDetailPageComponent,
             },
-            { path: 'error', component: ErrorPageComponent },
         ],
     },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
+    { path: '**', component: ErrorPageComponent },
 ];
 
 @NgModule({
