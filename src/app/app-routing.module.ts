@@ -1,3 +1,4 @@
+import { ErrorPageComponent } from './pages/ErrorPage/ErrorPage.component';
 import { MainPageComponent } from './pages/MainPage/MainPage.component';
 // @angular
 import { NgModule } from '@angular/core';
@@ -10,15 +11,26 @@ import { TransfersPageComponent } from './pages/TransfersPage/TransfersPage.comp
 import { RegisterPageComponent } from './pages/RegisterPage/RegisterPage.component';
 import { AccountsPageComponent } from './pages/AccountsPage/AccountsPage.component';
 import { AccountDetailPageComponent } from './pages/AccountDetailPage/AccountDetailPage.component';
+import { SidebarComponent } from './components/Sidebar/Sidebar.component';
 
 const routes: Routes = [
-    { path: 'main', component: MainPageComponent },
-    { path: 'accounts', component: AccountsPageComponent },
-    { path: 'account/:accountNumber', component: AccountDetailPageComponent },
-    { path: 'transfers', component: TransfersPageComponent },
+    {
+        path: '',
+        component: SidebarComponent,
+        children: [
+            { path: '', pathMatch: 'full', redirectTo: 'main' },
+            { path: 'main', component: MainPageComponent },
+            { path: 'accounts', component: AccountsPageComponent },
+            { path: 'transfers', component: TransfersPageComponent },
+            {
+                path: 'account/:accountNumber',
+                component: AccountDetailPageComponent,
+            },
+            { path: 'error', component: ErrorPageComponent },
+        ],
+    },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
-    { path: '', redirectTo: '/main', pathMatch: 'full' },
 ];
 
 @NgModule({
@@ -28,6 +40,7 @@ const routes: Routes = [
 export class AppRoutingModule {}
 
 export const routingComponent = [
+    SidebarComponent,
     MainPageComponent,
     AccountDetailPageComponent,
     AccountsPageComponent,

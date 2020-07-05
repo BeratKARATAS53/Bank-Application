@@ -1,19 +1,26 @@
-<div class="sidenav">
+<div class="sidebar">
     <h3>{{ username }}</h3>
     <hr />
-    <a href="/main">{{ "sidebar.main" | translate }}</a>
+    <a routerLink="/main" routerLinkActive="selected">
+        {{ "sidebar.main" | translate }}
+    </a>
     <hr />
-    <a href="/accounts">
+    <a routerLink="/accounts" routerLinkActive="selected">
         {{ "sidebar.accounts" | translate }} ({{ numberOfAccounts }})
     </a>
     <hr />
-    <a href="/transfers">{{ "sidebar.transfers" | translate }}</a>
+    <a routerLink="/transfers" routerLinkActive="selected">
+        {{ "sidebar.transfers" | translate }}
+    </a>
     <hr />
-    <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
-        {{ "sidebar.logout" | translate }}
-    </button>
+    <div class="btn-group" role="group">
+        <button class="btn btn-danger btn-lg" (click)="openModal(logOutModal)">
+            {{ "sidebar.logout" | translate }}
+        </button>
+    </div>
+
     <hr />
-    <div class="btn-group" role="group" style="width: 100%;">
+    <div class="btn-group" role="group">
         <button
             type="button"
             class="btn btn-secondary"
@@ -46,3 +53,5 @@
         </button>
     </div>
 </ng-template>
+
+<router-outlet></router-outlet>
