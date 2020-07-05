@@ -68,7 +68,7 @@ export class AccountsPageComponent implements OnInit {
         this.accountForm = this.formBuilder.group({
             // Form İle İlgili Validasyonları Belirleme
             accountName: ['', Validators.required],
-            amount: ['10000', [Validators.required, Validators.min(1)]],
+            amount: [10000, [Validators.required, Validators.min(1)]],
             currency: ['TL', Validators.required],
             otherAmount: [[]],
         });
